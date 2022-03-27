@@ -5,6 +5,13 @@ public class Pixel {
 	private int positionN;
 	private int positionM;
 	
+	
+	
+	public Pixel(double intensite, int positionN, int positionM) {
+		this.intensite = intensite;
+		this.positionN = positionN;
+		this.positionM = positionM;
+	}
 	public final double getIntensite() {
 		return intensite;
 	}
