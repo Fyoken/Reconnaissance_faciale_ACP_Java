@@ -1,6 +1,7 @@
 package acp;
 
 import Jama.Matrix;
+import Jama.SingularValueDecomposition;
 
 public class Matrice {
 	private int n;
@@ -52,6 +53,13 @@ public class Matrice {
 			}
 		}
 		return mCov;
+	}
+	
+	public double[] valeursPropres() {
+		Matrix mCov=this.matriceCovariance();
+		SingularValueDecomposition svd= mCov.svd();
+		
+		return svd.getSingularValues();
 	}
 
 }
