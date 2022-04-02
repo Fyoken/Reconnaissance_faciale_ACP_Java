@@ -139,5 +139,37 @@ public class Matrice {
 		
 		return imageI;
 	}
+	
+	public double[] moyenne() {
+		double[] moy=new double[this.n];
+		
+		for(int i=0;i<this.n;i++) {
+			moy[i]=0;
+			for(int j=0;j<this.m;j++) {
+				moy[i]+=this.pixels[i][j].getIntensite();
+			}
+			moy[i]=moy[i]/this.m;
+		}
+		
+		
+		return moy;
+	}
+	
+	public void centralisation() {
+		Pixel[][] A= new Pixel[this.n][this.m];
+		double[] moy=this.moyenne();
+		
+		for(int i=0;i<this.n;i++){
+			for(int j=0;j<this.m;j++) {
+				double val=this.pixels[i][j].getIntensite()-moy[i];
+				A[i][j].setIntensite(val);
+			}
+		}
+			
+		this.setPixels(A);
+	}
+
+	
+	
 
 }
