@@ -57,14 +57,14 @@ public class Matrice {
 	}
 
 	public void matriceCovariance() {
-		Matrix mCov = new Matrix(this.n, this.n);
+		Matrix mCov = new Matrix(this.m, this.m);
 
-		for (int i = 0; i < this.n; i++) {
-			for (int j = 0; j < this.n; j++) {
+		for (int i = 0; i < this.m; i++) {
+			for (int j = 0; j < this.m; j++) {
 				mCov.set(i, j, 0);
 
-				for (int k = 0; k < this.m; k++) {
-					double temp = mCov.get(i, j) + this.pixels[i][k].getIntensite() * this.pixels[j][k].getIntensite();
+				for (int k = 0; k < this.n; k++) {
+					double temp = mCov.get(i, j) + this.pixels[k][i].getIntensite() * this.pixels[k][j].getIntensite();
 					mCov.set(i, j, temp);
 				}
 
