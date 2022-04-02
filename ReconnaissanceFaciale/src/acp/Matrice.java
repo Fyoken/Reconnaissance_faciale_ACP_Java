@@ -9,6 +9,7 @@ public class Matrice {
 	private Pixel[][] pixels;
 	private Matrix matriceCovariance;
 	private SingularValueDecomposition valeursPropres;
+	private Matrix vecteursPropres;
 
 	public Matrice(int n, int m) {
 		this.n = n;
@@ -56,6 +57,14 @@ public class Matrice {
 		this.valeursPropres = valeursPropres;
 	}
 
+	public final Matrix getVecteursPropres() {
+		return vecteursPropres;
+	}
+
+	public final void setVecteursPropres(Matrix vecteursPropres) {
+		this.vecteursPropres = vecteursPropres;
+	}
+
 	public void matriceCovariance() {
 		Matrix mCov = new Matrix(this.m, this.m);
 
@@ -78,6 +87,24 @@ public class Matrice {
 
 		this.setValeursPropres(svd);
 		return this.valeursPropres.getSingularValues();
+	}
+
+	public Matrix vecteursPropres() {
+		Matrix U = new Matrix(this.n, this.m);
+
+		for (int i = 0; i < this.n; i++) {
+			for (int j = 0; j < this.valeursPropres.getU().getColumnDimension(); j++) {
+				U.set(i, j, 0);
+
+				for (int k = 0; k < this.valeursPropres.getU().getRowDimension(); k++) {
+					double temp = U.get(i, j) + this.pixels[i][k].getIntensite() * this.valeursPropres.getU().get(k, j);
+					U.set(i, j, temp);
+				}
+			}
+		}
+
+		this.setVecteursPropres(U);
+		return U;
 	}
 
 }
