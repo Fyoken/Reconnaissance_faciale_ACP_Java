@@ -115,7 +115,7 @@ public class Matrice {
 				mProj.set(i, j, 0);
 
 				for (int k = 0; k < this.n; k++) {
-					double temp = mProj.get(i, j) + this.pixels[k][i].getIntensite()*this.vecteursPropres().get(k, j);
+					double temp = mProj.get(i, j) + this.pixels[k][i].getIntensite()*this.vecteursPropres.get(k, j);
 					mProj.set(i, j, temp);
 				}
 
@@ -123,6 +123,21 @@ public class Matrice {
 		}
 		
 		return mProj;
+	}
+	
+	public double[] reconstructionImage(int i) {
+		double[] imageI=new double[this.n];
+		int compteur=0;
+		
+		for(int j=0;j<imageI.length;j++) {
+			imageI[compteur]=0;
+			for(int k=0;k<this.matriceProjection().getColumnDimension();k++) {
+				imageI[compteur]+=this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k);
+			}
+			compteur+=1;
+		}
+		
+		return imageI;
 	}
 
 }
