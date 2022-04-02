@@ -9,6 +9,7 @@ public class Matrice {
 	private Pixel[][] pixels;
 	private Matrix matriceCovariance;
 	private SingularValueDecomposition valeursPropres;
+	private Matrix vecteursPropres;
 
 	public Matrice(int n, int m) {
 		this.n = n;
@@ -56,15 +57,23 @@ public class Matrice {
 		this.valeursPropres = valeursPropres;
 	}
 
-	public void matriceCovariance() {
-		Matrix mCov = new Matrix(this.n, this.n);
+	public final Matrix getVecteursPropres() {
+		return vecteursPropres;
+	}
 
-		for (int i = 0; i < this.n; i++) {
-			for (int j = 0; j < this.n; j++) {
+	public final void setVecteursPropres(Matrix vecteursPropres) {
+		this.vecteursPropres = vecteursPropres;
+	}
+
+	public void matriceCovariance() {
+		Matrix mCov = new Matrix(this.m, this.m);
+
+		for (int i = 0; i < this.m; i++) {
+			for (int j = 0; j < this.m; j++) {
 				mCov.set(i, j, 0);
 
-				for (int k = 0; k < this.m; k++) {
-					double temp = mCov.get(i, j) + this.pixels[i][k].getIntensite() * this.pixels[j][k].getIntensite();
+				for (int k = 0; k < this.n; k++) {
+					double temp = mCov.get(i, j) + this.pixels[k][i].getIntensite() * this.pixels[k][j].getIntensite();
 					mCov.set(i, j, temp);
 				}
 
@@ -79,5 +88,88 @@ public class Matrice {
 		this.setValeursPropres(svd);
 		return this.valeursPropres.getSingularValues();
 	}
+
+	public Matrix vecteursPropres() {
+		Matrix U = new Matrix(this.n, this.m);
+
+		for (int i = 0; i < this.n; i++) {
+			for (int j = 0; j < this.valeursPropres.getU().getColumnDimension(); j++) {
+				U.set(i, j, 0);
+
+				for (int k = 0; k < this.valeursPropres.getU().getRowDimension(); k++) {
+					double temp = U.get(i, j) + this.pixels[i][k].getIntensite() * this.valeursPropres.getU().get(k, j);
+					U.set(i, j, temp);
+				}
+			}
+		}
+
+		this.setVecteursPropres(U);
+		return U;
+	}
+	
+	public Matrix matriceProjection() {
+		Matrix mProj=new Matrix(this.m,this.m);
+		
+		for (int i = 0; i < mProj.getRowDimension(); i++) {
+			for (int j = 0; j < mProj.getColumnDimension(); j++) {
+				mProj.set(i, j, 0);
+
+				for (int k = 0; k < this.n; k++) {
+					double temp = mProj.get(i, j) + this.pixels[k][i].getIntensite()*this.vecteursPropres.get(k, j);
+					mProj.set(i, j, temp);
+				}
+
+			}
+		}
+		
+		return mProj;
+	}
+	
+	public double[] reconstructionImage(int i) {
+		double[] imageI=new double[this.n];
+		int compteur=0;
+		
+		for(int j=0;j<imageI.length;j++) {
+			imageI[compteur]=0;
+			for(int k=0;k<this.matriceProjection().getColumnDimension();k++) {
+				imageI[compteur]+=this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k);
+			}
+			compteur+=1;
+		}
+		
+		return imageI;
+	}
+	
+	public double[] moyenne() {
+		double[] moy=new double[this.n];
+		
+		for(int i=0;i<this.n;i++) {
+			moy[i]=0;
+			for(int j=0;j<this.m;j++) {
+				moy[i]+=this.pixels[i][j].getIntensite();
+			}
+			moy[i]=moy[i]/this.m;
+		}
+		
+		
+		return moy;
+	}
+	
+	public void centralisation() {
+		Pixel[][] A= new Pixel[this.n][this.m];
+		double[] moy=this.moyenne();
+		
+		for(int i=0;i<this.n;i++){
+			for(int j=0;j<this.m;j++) {
+				double val=this.pixels[i][j].getIntensite()-moy[i];
+				A[i][j].setIntensite(val);
+			}
+		}
+			
+		this.setPixels(A);
+	}
+
+	
+	
 
 }
