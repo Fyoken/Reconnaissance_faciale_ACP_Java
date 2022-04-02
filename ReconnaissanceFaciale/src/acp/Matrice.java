@@ -106,5 +106,23 @@ public class Matrice {
 		this.setVecteursPropres(U);
 		return U;
 	}
+	
+	public Matrix matriceProjection() {
+		Matrix mProj=new Matrix(this.m,this.m);
+		
+		for (int i = 0; i < mProj.getRowDimension(); i++) {
+			for (int j = 0; j < mProj.getColumnDimension(); j++) {
+				mProj.set(i, j, 0);
+
+				for (int k = 0; k < this.n; k++) {
+					double temp = mProj.get(i, j) + this.pixels[k][i].getIntensite()*this.vecteursPropres().get(k, j);
+					mProj.set(i, j, temp);
+				}
+
+			}
+		}
+		
+		return mProj;
+	}
 
 }
