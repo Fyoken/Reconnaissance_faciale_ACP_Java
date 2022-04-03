@@ -168,8 +168,6 @@ public class Matrice {
 			}
 			moy[i]=moy[i]/this.m;
 		}
-		
-		
 		return moy;
 	}
 	
