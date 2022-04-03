@@ -1,5 +1,12 @@
 package acp;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
 
@@ -181,6 +188,17 @@ public class Matrice {
 	}
 
 	
-	
+	public void transformationNiveauGris(String inImg) throws IOException {
+	      // lit l'image d'entrée
+	      File f = new File(inImg);
+	      BufferedImage inputImage = ImageIO.read(f);
+	      for(int x = 0; x < this.n; x++) {
+	          for(int y = 0; y < this.m; y++) {
+	              Color color = new Color(inputImage.getRGB(x,y));
+	              int gray = color.getRed();
+	              this.getPixels()[x][y].setIntensite(gray / 255d);
+	          }
+	      }
+	 }
 
 }
