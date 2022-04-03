@@ -102,7 +102,19 @@ public class Matrice {
 				}
 			}
 		}
-
+		
+		for(int j=0;j<U.getColumnDimension();j++) {
+			double norme=0;
+			for(int i=0;i<U.getRowDimension();i++ ) {
+				norme+=Math.pow(U.get(i, j), 2) ;
+			}
+			norme=Math.sqrt(norme);
+			System.out.println(norme);
+			for(int i=0; i<U.getRowDimension();i++) {
+				U.set(i, j, U.get(i, j)/norme);
+			}
+		}
+		
 		this.setVecteursPropres(U);
 		return U;
 	}
