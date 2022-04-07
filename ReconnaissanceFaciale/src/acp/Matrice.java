@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
+import vectorisation.Vecteur;
 
 public class Matrice {
 	private int n;
@@ -143,51 +144,62 @@ public class Matrice {
 		return mProj;
 	}
 	
-	public double[] reconstructionImage(int i) {
-		double[] imageI=new double[this.n];
-		int compteur=0;
+	//Methode pour recreer une image avec la matrice de projection
+	public Vecteur reconstructionImage(int i) {
+		//creation d'un vecteur de retour
+		Vecteur imageI=new Vecteur();
 		
-		for(int j=0;j<imageI.length;j++) {
-			imageI[compteur]=0;
-			for(int k=0;k<this.matriceProjection().getColumnDimension();k++) {
-				imageI[compteur]+=this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k);
+		for(int j=0;j<this.vecteursPropres.getRowDimension();j++) {
+			//initialisation des pixels de le vecteur de retour
+			imageI.getPixels()[j]=new Pixel(0);
+			//calcul de la valeur de l'intensite 
+			for(int k=0;k<this.vecteursPropres().getColumnDimension();k++) {
+				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k));
 			}
-			compteur+=1;
 		}
 		
 		return imageI;
 	}
 	
-	public double[] moyenne() {
-		double[] moy=new double[this.n];
+	//methode pour calculer le vecteur moyen
+	public Vecteur moyenne() {
+		//creation d'un vecteur de retour
+		Vecteur moy=new Vecteur();
 		
 		for(int i=0;i<this.n;i++) {
-			moy[i]=0;
+			//initialisation de chaque pixel
+			moy.getPixels()[i]=new Pixel(0);
+			
+			//calcul de la moyenne de chaque ligne de la matrice
 			for(int j=0;j<this.m;j++) {
-				moy[i]+=this.pixels[i][j].getIntensite();
+				moy.getPixels()[i].setIntensite(moy.getPixels()[i].getIntensite()+this.pixels[i][j].getIntensite());
 			}
-			moy[i]=moy[i]/this.m;
+			moy.getPixels()[i].setIntensite(moy.getPixels()[i].getIntensite()/this.m);
 		}
 		
 		
 		return moy;
 	}
 	
+	//methode pour centraliser tous les vecteurs images de la matrice
 	public void centralisation() {
+		//creation d'une matrice de pixel
 		Pixel[][] A= new Pixel[this.n][this.m];
-		double[] moy=this.moyenne();
+		//recuperation de la moyenne
+		Vecteur moy=this.moyenne();
 		
 		for(int i=0;i<this.n;i++){
 			for(int j=0;j<this.m;j++) {
-				double val=this.pixels[i][j].getIntensite()-moy[i];
+				//soustraction de la moyen a la valeur de chaque pixel
+				double val=this.pixels[i][j].getIntensite()-moy.getPixels()[i].getIntensite();
 				A[i][j].setIntensite(val);
 			}
 		}
-			
+		//changement de la matrice image par celle centralisée
 		this.setPixels(A);
 	}
 
-	//Méthode pour 
+	//Méthode pour recupere une image
 	public void transformationNiveauGris(String inImg) {
 	      // lit l'image d'entrée
 	      File f = new File(inImg);
@@ -232,6 +244,9 @@ public class Matrice {
 			System.err.println("Erreur écriture image");
 		}
 	}
+	
+	
+	
 
 
 }
