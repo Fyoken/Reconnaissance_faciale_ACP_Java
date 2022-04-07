@@ -200,5 +200,32 @@ public class Matrice {
 	          }
 	      }
 	 }
+	
+	//Méthode pour afficher une matrice en niveau de gris
+	public void affichage() {
+		//Déclaration des variables 
+		//Création de l'image
+		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_INT_RGB);
+		//Création du fichier qui va stocker l'image
+		File f = new File("Image.jpg");
+		
+		for(int i=0;i<this.n;i++){
+			for(int j=0;j<this.m;j++) {
+				//On convertit la valeur du pixel en couleur
+				Color color = new Color((int) (this.getPixels()[i][j].getIntensite()*255d) , (int) (this.getPixels()[i][j].getIntensite()*255d), 
+				(int) (this.getPixels()[i][j].getIntensite()*255d));
+				int gris = color.getRGB();
+				
+				img.setRGB(i,j, gris);
+			}
+		}
+		
+		try {
+			ImageIO.write(img, "jpg", f);
+		}catch(IOException e ) {
+			System.err.println("Erreur écriture image");
+		}
+	}
+
 
 }
