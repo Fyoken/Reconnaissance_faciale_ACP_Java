@@ -11,17 +11,17 @@ import acp.Matrice;
 import acp.Pixel;
 
 public class Vecteur {
-	public Pixel[] v;	
+	public Pixel[][] v;	
 	
-	public Vecteur() {
-		v = new Pixel[10000];
+	public Vecteur(int n) {
+		v = new Pixel[n][1];
 	}
 	
 	public int getNbLigne() {
 		return this.v.length;
 	}
 	
-	public Pixel[] getPixels() {
+	public Pixel[][] getPixels() {
 		return v;
 	}
 	
@@ -31,7 +31,8 @@ public class Vecteur {
 		 int k = 0;
 		 for (int i = 0; i<matrice.getN(); i++) {
 			 for (int j = 0; j < matrice.getM(); j++) {
-				 matrice.getPixels()[i][j].setIntensite(this.v[k].getIntensite());
+				 Pixel pixel = new Pixel(this.getPixels()[k][0].getIntensite(), i, j);
+				 matrice.getPixels()[i][j] = pixel;
 				 k++;
 			 }
 		 }

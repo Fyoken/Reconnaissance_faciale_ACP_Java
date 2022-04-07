@@ -210,14 +210,15 @@ public class Matrice {
 
 	public Vecteur transfoVect() {
 		// transformation de matrice à vecteur
-		Vecteur vec = new Vecteur();
+		Vecteur vec = new Vecteur(10000);
 		int indice = 0;
 		int n = this.getN();
 		 
 		while (indice < n*n) {
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					vec.getPixels()[indice].setIntensite(this.getPixels()[i][j].getIntensite());
+					Pixel pixel = new Pixel (this.getPixels()[i][j].getIntensite(), i, j);
+					vec.getPixels()[indice][0] = pixel;
 					indice++;
 		        }
 			}
