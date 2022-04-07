@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
+import vectorisation.Vecteur;
 
 public class Matrice {
 	private int n;
@@ -205,6 +206,23 @@ public class Matrice {
 	      }catch(IOException e) {
 	    	  System.err.println("Erreur lecture fichier");
 	      }	      
+	 }
+
+	public Vecteur transfoVect() {
+		// transformation de matrice à vecteur
+		Vecteur vec = new Vecteur();
+		int indice = 0;
+		int n = this.getN();
+		 
+		while (indice < n*n) {
+			for (int i = 0; i < n; i++) {
+				for (int j = 0; j < n; j++) {
+					vec.getPixels()[indice].setIntensite(this.getPixels()[i][j].getIntensite());
+					indice++;
+		        }
+			}
+		}
+		return vec;
 	 }
 	
 	
