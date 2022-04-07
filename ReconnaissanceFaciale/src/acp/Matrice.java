@@ -187,18 +187,51 @@ public class Matrice {
 		this.setPixels(A);
 	}
 
-	
-	public void transformationNiveauGris(String inImg) throws IOException {
+	//Méthode pour 
+	public void transformationNiveauGris(String inImg) {
 	      // lit l'image d'entrée
 	      File f = new File(inImg);
-	      BufferedImage inputImage = ImageIO.read(f);
-	      for(int x = 0; x < this.n; x++) {
-	          for(int y = 0; y < this.m; y++) {
-	              Color color = new Color(inputImage.getRGB(x,y));
-	              int gray = color.getRed();
-	              this.getPixels()[x][y].setIntensite(gray / 255d);
-	          }
-	      }
+	      try {
+	    	  BufferedImage image = ImageIO.read(f);
+	    	  for(int x = 0; x < this.n; x++) {
+		          for(int y = 0; y < this.m; y++) {
+		        	  //on crée une couleur
+		              Color couleur = new Color(image.getRGB(x,y));
+		              int gris = couleur.getRed();
+		              //On crée le pixel lié à la couleur
+		              this.getPixels()[x][y] = new Pixel(gris/255d, x ,y);
+		          }
+		      }
+	      }catch(IOException e) {
+	    	  System.err.println("Erreur lecture fichier");
+	      }	      
 	 }
+	
+	
+	//Méthode pour afficher une matrice en niveau de gris
+	public void affichage() {
+		//Déclaration des variables 
+		//Création de l'image
+		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_INT_RGB);
+		//Création du fichier qui va stocker l'image
+		File f = new File("Image.jpg");
+		
+		for(int i=0;i<this.n;i++){
+			for(int j=0;j<this.m;j++) {
+				//On convertit la valeur du pixel en couleur
+				Color couleur = new Color((int) (this.getPixels()[i][j].getIntensite()*255d) , (int) (this.getPixels()[i][j].getIntensite()*255d), 
+				(int) (this.getPixels()[i][j].getIntensite()*255d));
+				int gris = couleur.getRGB();
+				img.setRGB(i,j, gris);
+			}
+		}
+		//On écrit l'image dans le fichier f
+		try {
+			ImageIO.write(img, "jpg", f);
+		}catch(IOException e ) {
+			System.err.println("Erreur écriture image");
+		}
+	}
+
 
 }
