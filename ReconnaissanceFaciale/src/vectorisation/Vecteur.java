@@ -13,8 +13,8 @@ import acp.Pixel;
 public class Vecteur {
 	public Pixel[][] v;	
 	
-	public Vecteur(int n) {
-		v = new Pixel[n][1];
+	public Vecteur() {
+		v = new Pixel[10000][1];
 	}
 	
 	public int getNbLigne() {
@@ -25,7 +25,10 @@ public class Vecteur {
 		return v;
 	}
 	
-	
+	public void setV(Pixel[][] v) {
+		this.v = v;
+	}
+
 	public Matrice transfoMat() {
 		Matrice matrice = new Matrice(100, 100);
 		 int k = 0;
