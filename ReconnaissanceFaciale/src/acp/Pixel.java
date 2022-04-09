@@ -12,6 +12,11 @@ public class Pixel {
 		this.positionN = positionN;
 		this.positionM = positionM;
 	}
+	public Pixel(double intensite) {
+		this.intensite = intensite;
+		
+	}
+	
 	public final double getIntensite() {
 		return intensite;
 	}

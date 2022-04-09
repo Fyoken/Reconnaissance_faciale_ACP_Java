@@ -25,21 +25,6 @@ public class Vecteur {
 		return v;
 	}
 	
-	public void transfoVect(Matrice matrice) {
-		// transformation de matrice à vecteur
-         int indice = 0;
-         int n = matrice.getN();
-         
-         while (indice < n*n) {
-         	for (int i = 0; i < n; i++) {
-	            	for (int j = 0; j < n; j++) {
-	            		this.v[indice].setIntensite(matrice.getPixels()[i][j].getIntensite());
-	            		indice++;
-	            	}
-	            }
-         }
-	 }
-	
 	
 	public Matrice transfoMat() {
 		Matrice matrice = new Matrice(100, 100);
@@ -53,3 +38,4 @@ public class Vecteur {
 		 return matrice;
 	}
 }
+
