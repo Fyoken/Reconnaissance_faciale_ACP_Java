@@ -73,9 +73,12 @@ public class Matrice {
 		this.vecteursPropres = vecteursPropres;
 	}
 
+	//methode d'initialisation de la matrice de covariance reduite
 	public void matriceCovariance() {
+		//creation d'une nouvelle matrice carre de la taille des colonnes de la matrice
 		Matrix mCov = new Matrix(this.m, this.m);
 
+		//multiplication de la transpose de la matrice image par la matrice images
 		for (int i = 0; i < this.m; i++) {
 			for (int j = 0; j < this.m; j++) {
 				mCov.set(i, j, 0);
@@ -90,6 +93,7 @@ public class Matrice {
 		this.setMatriceCovariance(mCov);
 	}
 
+	//methode pour recuperer et initialiser les valeurs propres de la matrice de covariance reduite
 	public double[] valeursPropres() {
 		SingularValueDecomposition svd = this.matriceCovariance.svd();
 
@@ -97,9 +101,12 @@ public class Matrice {
 		return this.valeursPropres.getSingularValues();
 	}
 
+	//methode pour calculer les vecteurs propres
 	public Matrix vecteursPropres() {
+		//creation d'une matrice de la meme taille que la matrice images
 		Matrix U = new Matrix(this.n, this.m);
 
+		//multiplication de la matrice images vace la matrice des vecteurs propres de la matrice de covariance reduite
 		for (int i = 0; i < this.n; i++) {
 			for (int j = 0; j < this.valeursPropres.getU().getColumnDimension(); j++) {
 				U.set(i, j, 0);
@@ -111,6 +118,7 @@ public class Matrice {
 			}
 		}
 		
+		//transformation des vecteurs en leur vecteur unitaire
 		for(int j=0;j<U.getColumnDimension();j++) {
 			double norme=0;
 			for(int i=0;i<U.getRowDimension();i++ ) {
@@ -126,9 +134,12 @@ public class Matrice {
 		return U;
 	}
 	
+	//methode pour calculer la matrice de projection des images
 	public Matrix matriceProjection() {
+		//creation d'une nouvelle matrice
 		Matrix mProj=new Matrix(this.m,this.m);
 		
+		//multiplication de la transpose de la matrice avec la matrice des vecteurs propres
 		for (int i = 0; i < mProj.getRowDimension(); i++) {
 			for (int j = 0; j < mProj.getColumnDimension(); j++) {
 				mProj.set(i, j, 0);
