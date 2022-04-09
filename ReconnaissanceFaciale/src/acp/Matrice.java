@@ -257,8 +257,8 @@ public class Matrice {
 		for(int i=0;i<this.n;i++){
 			for(int j=0;j<this.m;j++) {
 				//On convertit la valeur du pixel en couleur
-				Color couleur = new Color((int) (this.getPixels()[i][j].getIntensite()*255d) , (int) (this.getPixels()[i][j].getIntensite()*255d), 
-				(int) (this.getPixels()[i][j].getIntensite()*255d));
+				Color couleur = new Color((int) ((1-this.getPixels()[i][j].getIntensite())*255d) , (int) ((1-this.getPixels()[i][j].getIntensite())*255d), 
+						(int) ((1-this.getPixels()[i][j].getIntensite())*255d));
 				int gris = couleur.getRGB();
 				img.setRGB(i,j, gris);
 			}
