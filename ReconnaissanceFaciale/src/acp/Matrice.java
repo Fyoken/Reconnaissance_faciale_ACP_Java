@@ -156,7 +156,16 @@ public class Matrice {
 			for(int k=0;k<this.vecteursPropres().getColumnDimension();k++) {
 				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k));
 			}
+			
+			imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.moyenne().getPixels()[j].getIntensite());
+			if (imageI.getPixels()[j].getIntensite() < 0) {
+				imageI.getPixels()[j].setIntensite(0);
+			}
+			if (imageI.getPixels()[j].getIntensite() > 1) {
+				imageI.getPixels()[j].setIntensite(1);
+			}
 		}
+		
 		
 		return imageI;
 	}
