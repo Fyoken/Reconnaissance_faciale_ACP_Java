@@ -1,64 +1,80 @@
 package main;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.imageio.ImageIO;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
-import acp.Matrice;
-import acp.Pixel;
-import vectorisation.Vecteur;
+public class Main extends Application { 
+	  
+    @Override 
+    public void start(Stage primaryStage) { 
+        
+    	// On récupère les distances
+    	List<String> dist = getParameters().getUnnamed();
+    	int taille = dist.size();
+    	
+    	// Création des K catégories
+        final List<BarChart.Series> seriesList = new LinkedList<>(); 
+        final String[] categoriesNames = new String[taille];
+        for (int i = 0; i < taille; i++) {
+        	int j = i+1;
+        	categoriesNames[i] = ""+j;
+        }
+        final String[] seriesNames = {"Erreur"}; 
+        final double[][] allValues = new double[1][taille];
+        for (int  i = 0; i < taille; i++) {
+            allValues[0][i]=Double.parseDouble(dist.get(i)); 
+    	}
+        final double minY = 0; 
+        double maxY = -Double.MAX_VALUE; 
+        for (int seriesIndex = 0; seriesIndex < seriesNames.length; seriesIndex++) { 
+            final BarChart.Series series = new BarChart.Series<>(); 
+            series.setName(seriesNames[seriesIndex]); 
+            final double[] values = allValues[seriesIndex]; 
+            for (int categoryIndex = 0; categoryIndex < categoriesNames.length; categoryIndex++) { 
+                final double value = values[categoryIndex]; 
+                final String category = categoriesNames[categoryIndex]; 
+                maxY = Math.max(maxY, value); 
+                final BarChart.Data data = new BarChart.Data(category, value); 
+                series.getData().add(data); 
+            } 
+            seriesList.add(series); 
+        } 
+        
+        // Création du graphique
+        final CategoryAxis xAxis = new CategoryAxis(); 
+        xAxis.getCategories().setAll(categoriesNames); 
+        xAxis.setLabel("K"); 
+        final NumberAxis yAxis = new NumberAxis(minY, maxY, 50); 
+        yAxis.setLabel("Erreur"); 
+        final BarChart chart = new BarChart(xAxis, yAxis); 
+        chart.setTitle("Évolution de l'erreur en fonction de K"); 
+        chart.getData().setAll(seriesList); 
+        
+        // Montage de l'interface 
+        final StackPane root = new StackPane(); 
+        root.getChildren().add(chart); 
+        final Scene scene = new Scene(root, 500, 450); 
+        primaryStage.setTitle("Histogramme"); 
+        primaryStage.setScene(scene); 
+        primaryStage.show(); 
+    } 
+  
+    public static void main(String[] args) { 
+        // Mettre dans d la valeur renvoyée par affichageGraphique()
+    	double[] d = {50,25,12,5,3};
+    	String[] s = new String[d.length];
+    	for (int i = 0; i < d.length; i++) {
+    		s[i]=""+d[i];
+    	}
+    	launch(s); 
+    }
 
-public class Main {
-	
-	// Méthode pour afficher le graphique de l'évolution de l'erreur pour différentes valeurs de K
-	public static double[] affichageGraphique(String inImg) throws IOException {	
-		
-		// On récupère l'image d'entrée de la base d'apprentissage dans A
-		File f = new File(inImg);
-		BufferedImage img = ImageIO.read(f);
-		Pixel[][] A = new Pixel[100][100];
-		
-		// JM est A en Matrice, les deux boucles for et le setPixels permettent de lui donner ses valeurs
-		Matrice JM = new Matrice(100,100);
-		
-		// d est une liste qui comporte l'évolution de l'erreur pour chaque valeurs de K
-		double[] d = new double[JM.getVecteursPropres().getColumnDimension()+1];
-		
-		for(int i=0;i<JM.getN();i++){
-			for(int j=0;j<JM.getM();j++) {
-				A[i][j].setIntensite(img.getRGB(i, j));
-			}
-		}
-		JM.setPixels(A);
-		
-		// Pour chaque valeur de K
-		for (int K=1; K < JM.getVecteursPropres().getColumnDimension(); K++) {
-			
-			// On récupère l'image projetée Jp, le 0 correspond à dire que J est la première image soumise à l'ACP
-			Vecteur Jp = JM.reconstructionImage(0, K);
-			
-			// On transforme J en vecteur pour calculer la distance
-			Vecteur J=JM.transfoVect();
-			
-			// On calcule la distance euclidienne entre J et Jp et on l'ajoute à la liste des erreurs
-			double s = 0;
-			for (int i = 0; i < Jp.getNbLigne(); i++) {
-				s+=Math.pow(J.v[i].getIntensite() - Jp.v[i].getIntensite(),2);
-			}
-			d[K] = Math.sqrt(s);
-		}
-		
-		// Affichage de chaque valeur de la liste
-		for (int i = 0; i < d.length; i++) {
-			System.out.println("L'erreur pour K = "+i+" est : "+d[i]);
-		}
-		
-		return d;
-			
-	}
-	public static void main(String[] args) throws IOException {
-		
-	}
 }
