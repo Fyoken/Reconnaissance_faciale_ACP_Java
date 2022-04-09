@@ -68,6 +68,7 @@ public class Main extends Application {
     } 
   
     public static void main(String[] args) { 
+    	
         // Mettre dans d la valeur renvoyée par affichageGraphique()
     	double[] d = {50,25,12,5,3};
     	String[] s = new String[d.length];
