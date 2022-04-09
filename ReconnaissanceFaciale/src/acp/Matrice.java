@@ -156,11 +156,15 @@ public class Matrice {
 			for(int k=0;k<this.vecteursPropres().getColumnDimension();k++) {
 				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k));
 			}
-			
+			//ajout de la moyenne a l'image calculer
 			imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.moyenne().getPixels()[j].getIntensite());
+			
+			//si une valeur est negative elle prend la valeur 0
 			if (imageI.getPixels()[j].getIntensite() < 0) {
 				imageI.getPixels()[j].setIntensite(0);
 			}
+			
+			//si la valeur est supérieur a 1 elle prend la valeur 1
 			if (imageI.getPixels()[j].getIntensite() > 1) {
 				imageI.getPixels()[j].setIntensite(1);
 			}
@@ -269,6 +273,23 @@ public class Matrice {
 		}catch(IOException e ) {
 			System.err.println("Erreur écriture image");
 		}
+	}
+	
+	//methode pour ajouter un vecteur dans la prochaine colonne vide de la matrice
+	public void ajouterImage(Vecteur v) {
+		int i = 0;
+		//recherche de la premiere colonne vide
+		while (this.pixels[0][i] != null && i < this.getM()) {
+			i = i+1;
+		}
+		
+		//si la matrice n'est pas pleine on ajoute pixel dans la matrice
+		if(i<this.m) {
+			for (int j = 0; j<this.getN(); j++) {
+				this.pixels[j][i] = new Pixel(1- v.getPixels()[j].getIntensite());
+			}	
+		}
+		
 	}
 	
 	
