@@ -73,9 +73,12 @@ public class Matrice {
 		this.vecteursPropres = vecteursPropres;
 	}
 
+	//methode d'initialisation de la matrice de covariance reduite
 	public void matriceCovariance() {
+		//creation d'une nouvelle matrice carre de la taille des colonnes de la matrice
 		Matrix mCov = new Matrix(this.m, this.m);
 
+		//multiplication de la transpose de la matrice image par la matrice images
 		for (int i = 0; i < this.m; i++) {
 			for (int j = 0; j < this.m; j++) {
 				mCov.set(i, j, 0);
@@ -90,6 +93,7 @@ public class Matrice {
 		this.setMatriceCovariance(mCov);
 	}
 
+	//methode pour recuperer et initialiser les valeurs propres de la matrice de covariance reduite
 	public double[] valeursPropres() {
 		SingularValueDecomposition svd = this.matriceCovariance.svd();
 
@@ -97,9 +101,12 @@ public class Matrice {
 		return this.valeursPropres.getSingularValues();
 	}
 
+	//methode pour calculer les vecteurs propres
 	public Matrix vecteursPropres() {
+		//creation d'une matrice de la meme taille que la matrice images
 		Matrix U = new Matrix(this.n, this.m);
 
+		//multiplication de la matrice images vace la matrice des vecteurs propres de la matrice de covariance reduite
 		for (int i = 0; i < this.n; i++) {
 			for (int j = 0; j < this.valeursPropres.getU().getColumnDimension(); j++) {
 				U.set(i, j, 0);
@@ -111,6 +118,7 @@ public class Matrice {
 			}
 		}
 		
+		//transformation des vecteurs en leur vecteur unitaire
 		for(int j=0;j<U.getColumnDimension();j++) {
 			double norme=0;
 			for(int i=0;i<U.getRowDimension();i++ ) {
@@ -126,9 +134,12 @@ public class Matrice {
 		return U;
 	}
 	
+	//methode pour calculer la matrice de projection des images
 	public Matrix matriceProjection() {
+		//creation d'une nouvelle matrice
 		Matrix mProj=new Matrix(this.m,this.m);
 		
+		//multiplication de la transpose de la matrice avec la matrice des vecteurs propres
 		for (int i = 0; i < mProj.getRowDimension(); i++) {
 			for (int j = 0; j < mProj.getColumnDimension(); j++) {
 				mProj.set(i, j, 0);
@@ -156,7 +167,20 @@ public class Matrice {
 			for(int k=0;k<this.vecteursPropres().getColumnDimension();k++) {
 				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k));
 			}
+			//ajout de la moyenne a l'image calculer
+			imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.moyenne().getPixels()[j].getIntensite());
+			
+			//si une valeur est negative elle prend la valeur 0
+			if (imageI.getPixels()[j].getIntensite() < 0) {
+				imageI.getPixels()[j].setIntensite(0);
+			}
+			
+			//si la valeur est supérieur a 1 elle prend la valeur 1
+			if (imageI.getPixels()[j].getIntensite() > 1) {
+				imageI.getPixels()[j].setIntensite(1);
+			}
 		}
+		
 		
 		return imageI;
 	}
@@ -248,8 +272,8 @@ public class Matrice {
 		for(int i=0;i<this.n;i++){
 			for(int j=0;j<this.m;j++) {
 				//On convertit la valeur du pixel en couleur
-				Color couleur = new Color((int) (this.getPixels()[i][j].getIntensite()*255d) , (int) (this.getPixels()[i][j].getIntensite()*255d), 
-				(int) (this.getPixels()[i][j].getIntensite()*255d));
+				Color couleur = new Color((int) ((1-this.getPixels()[i][j].getIntensite())*255d) , (int) ((1-this.getPixels()[i][j].getIntensite())*255d), 
+						(int) ((1-this.getPixels()[i][j].getIntensite())*255d));
 				int gris = couleur.getRGB();
 				img.setRGB(i,j, gris);
 			}
@@ -260,6 +284,23 @@ public class Matrice {
 		}catch(IOException e ) {
 			System.err.println("Erreur écriture image");
 		}
+	}
+	
+	//methode pour ajouter un vecteur dans la prochaine colonne vide de la matrice
+	public void ajouterImage(Vecteur v) {
+		int i = 0;
+		//recherche de la premiere colonne vide
+		while (this.pixels[0][i] != null && i < this.getM()) {
+			i = i+1;
+		}
+		
+		//si la matrice n'est pas pleine on ajoute pixel dans la matrice
+		if(i<this.m) {
+			for (int j = 0; j<this.getN(); j++) {
+				this.pixels[j][i] = new Pixel(1- v.getPixels()[j].getIntensite());
+			}	
+		}
+		
 	}
 	
 	
