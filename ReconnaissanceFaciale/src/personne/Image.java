@@ -10,7 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Image {
-	private String nomImage;
+	protected String nomImage;
 
 	//Constructeur
 	public Image(String nomImage) {
