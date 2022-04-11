@@ -3,7 +3,7 @@ package personne;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Personne implements Comparable<Personne>{
+public class Personne{
 	private String nom;
 	private String prenom;
 	private Set<Image> images;
@@ -53,18 +53,14 @@ public class Personne implements Comparable<Personne>{
 		//On déclare nom pour stocker l'information du nom et prénom de la personne
 		String nomImage = this.getNom() + "_" + this.getPrenom();
 		//Pour toutes les images de la base d'entrainement
-		for(int i = 0; i <3; i++) {
+		for(int i = 1; i <4; i++) {
 			//On crée une nouvelle image que l'on va ensuite ajouter au set de la personne concernée
 			Image image = new Image("../BDD/Train/" + nomImage + "/" + nomImage + "_" +i+".jpg");
-			System.out.println(image.getNomImage());
 			this.images.add(image);
 		}
 	}
 	
-	public int compareTo(Personne pers2) {
-		return 0;
-	}
-	
+	//Test
 	public static void main(String[] args) {
 		Image image = new Image("../BDD/Train/AUZOLLES_Melina/AUZOLLES_Melina_1.jpg");
 		Set<Image> set = new HashSet<Image>();

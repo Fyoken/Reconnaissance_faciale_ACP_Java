@@ -62,5 +62,10 @@ public class Image {
 		}
 	}
 	
+	@Override
+	public String toString() {
+		return(this.getNomImage());
+	}
+	
 	
 }
