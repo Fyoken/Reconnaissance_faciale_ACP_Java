@@ -1,5 +1,6 @@
 package personne;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -17,6 +18,7 @@ public class Personne implements Comparable<Personne>{
 	public Personne(String nom, String prenom) {
 		this.nom = nom;
 		this.prenom = prenom;
+		this.images= new HashSet<Image>();
 	}
 	
 	
@@ -65,9 +67,9 @@ public class Personne implements Comparable<Personne>{
 	
 	public static void main(String[] args) {
 		Image image = new Image("../BDD/Train/AUZOLLES_Melina/AUZOLLES_Melina_1.jpg");
-		Set<Image> set = new TreeSet<Image>();
+		Set<Image> set = new HashSet<Image>();
 		set.add(image);
-		Personne moi = new Personne("AUZOLLES", "Melina", set);
+		Personne moi = new Personne("AUZOLLES", "Melina");
 		
 		moi.ajouterImages();
 	}
