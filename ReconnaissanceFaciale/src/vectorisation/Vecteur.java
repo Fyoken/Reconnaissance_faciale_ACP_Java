@@ -31,7 +31,7 @@ public class Vecteur {
 		 int k = 0;
 		 for (int i = 0; i<matrice.getN(); i++) {
 			 for (int j = 0; j < matrice.getM(); j++) {
-				 matrice.getPixels()[i][j].setIntensite(this.v[k].getIntensite());
+				 matrice.getPixels()[i][j]= new Pixel(this.v[k].getIntensite());
 				 k++;
 			 }
 		 }
