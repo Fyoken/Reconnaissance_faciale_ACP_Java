@@ -1,5 +1,6 @@
 package personne;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
@@ -9,14 +10,23 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import acp.Matrice;
+import acp.Pixel;
+
 public class Image {
 	protected String nomImage;
+	protected Matrice photo;
 
 	//Constructeur
 	public Image(String nomImage) {
 		this.nomImage = nomImage;
 	}
+	public Image(String nomImage, Matrice mat) {
+		this.nomImage = nomImage;
+		this.photo = mat;
+	}
 	
+	//Get et set du nom de l'image (= le lien d'où est stocké l'image)
 	public String getNomImage() {
 		return nomImage;
 	}
@@ -62,10 +72,38 @@ public class Image {
 		}
 	}
 	
+	//Méthode pour recupérer une image
+	public void transformationNiveauGris() {
+		// lit l'image d'entrée
+		File f = new File(this.getNomImage());
+		try {
+			BufferedImage image = ImageIO.read(f);
+			for(int x = 0; x < this.photo.getN(); x++) {
+				for(int y = 0; y < this.photo.getM(); y++) {
+					//on crée une couleur
+			        Color couleur = new Color(image.getRGB(x,y));
+			        int gris = couleur.getRed();
+			        //On crée le pixel lié à la couleur
+			        this.photo.getPixels()[x][y] = new Pixel(gris/255d, x ,y);
+			    }
+			}
+		}catch(IOException e) {
+			System.err.println("Erreur lecture fichier");
+		}	      
+	}
+
+	
 	@Override
 	public String toString() {
 		return(this.getNomImage());
 	}
-	
+	//test
+	public static void main(String[] args) {
+		Matrice mat = new Matrice(70,70);
+		Image image = new Image("BlackGoku.jpg", mat);
+		image.changeSize();
+		image.transformationNiveauGris();
+		image.photo.affichage();
+	}
 	
 }

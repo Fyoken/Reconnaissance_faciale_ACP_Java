@@ -223,26 +223,6 @@ public class Matrice {
 		this.setPixels(A);
 	}
 
-	//Méthode pour recupere une image
-	public void transformationNiveauGris(String inImg) {
-	      // lit l'image d'entrée
-	      File f = new File(inImg);
-	      try {
-	    	  BufferedImage image = ImageIO.read(f);
-	    	  for(int x = 0; x < this.n; x++) {
-		          for(int y = 0; y < this.m; y++) {
-		        	  //on crée une couleur
-		              Color couleur = new Color(image.getRGB(x,y));
-		              int gris = couleur.getRed();
-		              //On crée le pixel lié à la couleur
-		              this.getPixels()[x][y] = new Pixel(gris/255d, x ,y);
-		          }
-		      }
-	      }catch(IOException e) {
-	    	  System.err.println("Erreur lecture fichier");
-	      }	      
-	 }
-
 	public Vecteur transfoVect() {
 		// transformation de matrice à vecteur
 		Vecteur vec = new Vecteur();
