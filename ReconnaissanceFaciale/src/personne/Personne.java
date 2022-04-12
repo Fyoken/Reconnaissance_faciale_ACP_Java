@@ -18,8 +18,14 @@ public class Personne{
 		this.nom = nom;
 		this.prenom = prenom;
 		this.images= new HashSet<Image>();
+		this.ajouterImages();
 	}
 	
+	public static final Personne AuzollesM=new Personne("AUZOLLES","Melina");
+	public static final Personne BarbosaM=new Personne("BARBOSA","Mathias");
+	public static final Personne ChambasM=new Personne("CHAMBAS","Mathilde");
+	public static final Personne RibayneM=new Personne("RIBAYNE","Maxime");
+	public static final Personne SallM=new Personne("SALL","Marieme");
 	
 	//Get et Set pour le prénom
 	public String getNom() {
@@ -67,8 +73,7 @@ public class Personne{
 		set.add(image);
 		Personne moi = new Personne("AUZOLLES", "Melina");
 		
-		moi.ajouterImages();
-		System.out.println(moi.images);
+		System.out.println(Personne.ChambasM.images);
 	}
 	
 }
