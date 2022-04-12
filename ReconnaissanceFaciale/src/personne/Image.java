@@ -20,6 +20,8 @@ public class Image {
 	//Constructeur
 	public Image(String nomImage) {
 		this.nomImage = nomImage;
+		this.photo =  new Matrice(100,100);
+		this.transformationNiveauGris();
 	}
 	public Image(String nomImage, Matrice mat) {
 		this.nomImage = nomImage;
@@ -35,6 +37,12 @@ public class Image {
 		this.nomImage = nomImage;
 	}	
 	
+	public final Matrice getPhoto() {
+		return photo;
+	}
+	public final void setPhoto(Matrice photo) {
+		this.photo = photo;
+	}
 	//Méthode pour redimensionner la taille d'une image et la passer en niveau de gris
 	public void changeSize() {
 		String outImg;
@@ -99,11 +107,8 @@ public class Image {
 	}
 	//test
 	public static void main(String[] args) {
-		Matrice mat = new Matrice(70,70);
-		Image image = new Image("BlackGoku.jpg", mat);
-		image.changeSize();
-		image.transformationNiveauGris();
-		image.photo.affichage();
+		Image image = new Image("../BDD/Train/SALL_Marieme/SALL_Marieme_2.jpg");
+		image.getPhoto().affichage();
 	}
 	
 }
