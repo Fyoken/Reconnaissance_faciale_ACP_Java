@@ -179,15 +179,7 @@ public class Matrice {
 			//ajout de la moyenne a l'image calculer
 			imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.moyenne().getPixels()[j].getIntensite());
 			
-			//si une valeur est negative elle prend la valeur 0
-			if (imageI.getPixels()[j].getIntensite() < 0 ) {
-				imageI.getPixels()[j].setIntensite(0);
-			}
 			
-			//si la valeur est supérieur a 1 elle prend la valeur 1
-			if (imageI.getPixels()[j].getIntensite() > 1) {
-				imageI.getPixels()[j].setIntensite(1);
-			}
 		}
 		
 		
@@ -256,13 +248,27 @@ public class Matrice {
 		//Création de l'image
 		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_INT_RGB);
 		//Création du fichier qui va stocker l'image
-		File f = new File("Image2.jpg");
+		File f = new File("Image.jpg");
+		//recherche du minimum
+		double min=0;
+		for(int i=0;i<this.n;i++){
+			for(int j=0;j<this.m;j++) {
+				if(min==0||min>this.getPixels()[i][j].getIntensite())
+					min=this.getPixels()[i][j].getIntensite();
+			}
+		}
 		
 		for(int i=0;i<this.n;i++){
 			for(int j=0;j<this.m;j++) {
+				double valeurIntensite=1-this.getPixels()[i][j].getIntensite()+min;
+				if(valeurIntensite<0) {
+					valeurIntensite=0;
+				}
+				if(valeurIntensite>1) {
+					valeurIntensite=1;
+				}
 				//On convertit la valeur du pixel en couleur
-				Color couleur = new Color((int) ((1-this.getPixels()[i][j].getIntensite())*255d) , (int) ((1-this.getPixels()[i][j].getIntensite())*255d), 
-						(int) ((1-this.getPixels()[i][j].getIntensite())*255d));
+				Color couleur = new Color((int) (valeurIntensite*255d) , (int) (valeurIntensite*255d), (int) (valeurIntensite*255d));
 				int gris = couleur.getRGB();
 				img.setRGB(i,j, gris);
 			}
