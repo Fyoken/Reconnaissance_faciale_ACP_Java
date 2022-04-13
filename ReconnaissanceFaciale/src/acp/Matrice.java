@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
+import personne.Image;
 import vectorisation.Vecteur;
 
 public class Matrice {
@@ -20,6 +21,7 @@ public class Matrice {
 	private SingularValueDecomposition valeursPropres;
 	private Matrix vecteursPropres;
 	private Matrix matriceProjection;
+	private Vecteur moy;
 
 	public Matrice(int n, int m) {
 		this.n = n;
@@ -82,6 +84,15 @@ public class Matrice {
 	public final void setMatriceProjection(Matrix matriceProjection) {
 		this.matriceProjection = matriceProjection;
 	}
+	
+	public Vecteur getMoy() {
+		return moy;
+	}
+
+	public void setMoy(Vecteur moy) {
+		this.moy = moy;
+	}
+
 
 	// methode d'initialisation de la matrice de covariance reduite
 	public void matriceCovariance() {
@@ -169,7 +180,7 @@ public class Matrice {
 	}
 
 	// Methode pour recreer une image avec la matrice de projection
-	public Vecteur reconstructionImage(int i) {
+	public Vecteur reconstructionImage(int i, int K) {
 		// creation d'un vecteur de retour
 		Vecteur imageI = new Vecteur();
 
@@ -177,7 +188,7 @@ public class Matrice {
 			// initialisation des pixels de le vecteur de retour
 			imageI.getPixels()[j] = new Pixel(0);
 			// calcul de la valeur de l'intensite
-			for (int k = 0; k < this.vecteursPropres.getColumnDimension(); k++) {
+			for (int k = 0; k < K; k++) {
 				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()
 						+ this.vecteursPropres.get(j, k) * this.matriceProjection.get(i, k));
 			}
@@ -353,5 +364,64 @@ public class Matrice {
 			System.err.println("Erreur écriture image");
 		}
 	}
+	
+	// Méthode pour afficher le graphique de l'évolution de l'erreur pour une image et pour différentes valeurs de K
+			public double[] affichageGraphique(Image img) throws IOException {	
+					
+				Matrice JM = img.getPhoto();
+				double[] d = new double[this.getVecteursPropres().getColumnDimension()+1];
+					
+				// On transforme J en vecteur pour calculer la distance
+				Vecteur J=JM.transfoVect();
+				
+				// On inverse les valeurs de J
+				for (int i = 0; i < J.getNbLigne(); i++) {
+					J.getPixels()[i].setIntensite(1-J.getPixels()[i].getIntensite());
+				}
+				// Pour chaque valeur de K
+				for (int K = 1; K <= this.getVecteursPropres().getColumnDimension(); K++) {
+						
+					// On récupère l'image projetée Jp, le 0 correspond à dire que J est la première image soumise à l'ACP
+					Vecteur Jp = this.reconstructionImage(0, K);
+					// On calcule la distance euclidienne entre J et Jp et on l'ajoute à la liste des erreurs
+					double s = 0;
+					for (int i = 0; i < Jp.getNbLigne(); i++) {
+						s+=Math.pow(J.getPixels()[i].getIntensite() - Jp.getPixels()[i].getIntensite(),2);
+					}
+					d[K] = Math.sqrt(s);
+				}
+					
+				// Affichage de chaque valeur de la liste
+				for (int i = 1; i < d.length; i++) {
+					System.out.println("L'erreur pour K = "+i+" est : "+d[i]);
+				}
+					
+				return d;
+					
+			}
+			
+			// Méthode pour normaliser les valeurs propres et afficher l'évolution de la variance cumulée des eigenfaces
+			public void normaliserEtAfficherVariation(double[] vp) {
+				// Valeur de normalisation qui vaut la somme des valeurs propres
+				double s = 0;
+				
+				// Variance cumulée
+				double res = 0;
+				
+				// J première(s) eigenface(s)
+				int j;
+				
+				// On calcule s
+				for (int i = 0; i < vp.length; i++) {
+					s+=vp[i];
+				}
+				
+				// On normalise les valeurs propres et affiche l'évolution de la variation cumulée
+				for (int i = 0; i < vp.length; i++) {
+					res+=100*vp[i]/s;
+					j=i+1;
+					System.out.println("La variation cumulée par la/les "+j+" première(s) eigenface(s) est : "+res+" %");
+				}
+			}
 
 }
