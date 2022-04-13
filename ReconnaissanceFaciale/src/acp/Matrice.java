@@ -18,6 +18,7 @@ public class Matrice {
 	private Matrix matriceCovariance;
 	private SingularValueDecomposition valeursPropres;
 	private Matrix vecteursPropres;
+	private Matrix matriceProjection;
 
 	public Matrice(int n, int m) {
 		this.n = n;
@@ -71,6 +72,14 @@ public class Matrice {
 
 	public final void setVecteursPropres(Matrix vecteursPropres) {
 		this.vecteursPropres = vecteursPropres;
+	}
+
+	public final Matrix getMatriceProjection() {
+		return matriceProjection;
+	}
+
+	public final void setMatriceProjection(Matrix matriceProjection) {
+		this.matriceProjection = matriceProjection;
 	}
 
 	//methode d'initialisation de la matrice de covariance reduite
@@ -151,7 +160,7 @@ public class Matrice {
 
 			}
 		}
-		
+		this.setMatriceProjection(mProj);
 		return mProj;
 	}
 	
@@ -164,14 +173,14 @@ public class Matrice {
 			//initialisation des pixels de le vecteur de retour
 			imageI.getPixels()[j]=new Pixel(0);
 			//calcul de la valeur de l'intensite 
-			for(int k=0;k<this.vecteursPropres().getColumnDimension();k++) {
-				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.vecteursPropres.get(j, k)*this.matriceProjection().get(i, k));
+			for(int k=0;k<this.vecteursPropres.getColumnDimension();k++) {
+				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.vecteursPropres.get(j, k)*this.matriceProjection.get(i, k));
 			}
 			//ajout de la moyenne a l'image calculer
 			imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+this.moyenne().getPixels()[j].getIntensite());
 			
 			//si une valeur est negative elle prend la valeur 0
-			if (imageI.getPixels()[j].getIntensite() < 0) {
+			if (imageI.getPixels()[j].getIntensite() < 0 ) {
 				imageI.getPixels()[j].setIntensite(0);
 			}
 			
@@ -216,7 +225,7 @@ public class Matrice {
 			for(int j=0;j<this.m;j++) {
 				//soustraction de la moyen a la valeur de chaque pixel
 				double val=this.pixels[i][j].getIntensite()-moy.getPixels()[i].getIntensite();
-				A[i][j].setIntensite(val);
+				A[i][j] = new Pixel(val);
 			}
 		}
 		//changement de la matrice image par celle centralisée
@@ -232,7 +241,7 @@ public class Matrice {
 		while (indice < n*n) {
 			for (int i = 0; i < n; i++) {
 				for (int j = 0; j < n; j++) {
-					vec.getPixels()[indice].setIntensite(this.getPixels()[i][j].getIntensite());
+					vec.getPixels()[indice] = new Pixel(this.getPixels()[i][j].getIntensite());
 					indice++;
 		        }
 			}
@@ -247,7 +256,7 @@ public class Matrice {
 		//Création de l'image
 		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_INT_RGB);
 		//Création du fichier qui va stocker l'image
-		File f = new File("Image.jpg");
+		File f = new File("Image2.jpg");
 		
 		for(int i=0;i<this.n;i++){
 			for(int j=0;j<this.m;j++) {
