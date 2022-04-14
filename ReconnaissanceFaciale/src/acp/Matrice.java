@@ -366,7 +366,7 @@ public class Matrice {
 	}
 	
 	// Méthode pour afficher le graphique de l'évolution de l'erreur pour une image et pour différentes valeurs de K
-			public double[] affichageGraphique(Image img) throws IOException {	
+			public double[] affichageGraphique(Image img, int n) throws IOException {	
 					
 				Matrice JM = img.getPhoto();
 				double[] d = new double[this.getVecteursPropres().getColumnDimension()+1];
@@ -381,8 +381,8 @@ public class Matrice {
 				// Pour chaque valeur de K
 				for (int K = 1; K <= this.getVecteursPropres().getColumnDimension(); K++) {
 						
-					// On récupère l'image projetée Jp, le 0 correspond à dire que J est la première image soumise à l'ACP
-					Vecteur Jp = this.reconstructionImage(0, K);
+					// On récupère l'image projetée Jp, le n correspond à dire que J est la n-ième image soumise à l'ACP
+					Vecteur Jp = this.reconstructionImage(n, K);
 					// On calcule la distance euclidienne entre J et Jp et on l'ajoute à la liste des erreurs
 					double s = 0;
 					for (int i = 0; i < Jp.getNbLigne(); i++) {
@@ -391,23 +391,25 @@ public class Matrice {
 					d[K] = Math.sqrt(s);
 				}
 					
-				// Affichage de chaque valeur de la liste
+				// Test de l'affichage de chaque valeur de la liste
+				/*
 				for (int i = 1; i < d.length; i++) {
 					System.out.println("L'erreur pour K = "+i+" est : "+d[i]);
 				}
-					
+				*/	
 				return d;
 					
 			}
 			
 			// Méthode pour normaliser les valeurs propres et afficher l'évolution de la variance cumulée des eigenfaces
-			public void normaliserEtAfficherVariation(double[] vp) {
+			public double[] normaliserEtAfficherVariation(double[] vp) {
 				// Valeur de normalisation qui vaut la somme des valeurs propres
 				double s = 0;
 				
 				// Variance cumulée
 				double res = 0;
 				
+				double[] affichage = new double[vp.length];
 				// J première(s) eigenface(s)
 				int j;
 				
@@ -419,9 +421,13 @@ public class Matrice {
 				// On normalise les valeurs propres et affiche l'évolution de la variation cumulée
 				for (int i = 0; i < vp.length; i++) {
 					res+=100*vp[i]/s;
-					j=i+1;
-					System.out.println("La variation cumulée par la/les "+j+" première(s) eigenface(s) est : "+res+" %");
+					affichage[i] = res;
+					
+					// Pour tester
+					//j=i+1;
+					//System.out.println("La variation cumulée par la/les "+j+" première(s) eigenface(s) est : "+res+" %");
 				}
+				return affichage;
 			}
 
 }
