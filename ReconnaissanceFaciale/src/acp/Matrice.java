@@ -393,11 +393,6 @@ public class Matrice {
 			d[K] = Math.sqrt(s);
 		}
 
-		// Test de l'affichage de chaque valeur de la liste
-		/*
-		 * for (int i = 1; i < d.length; i++) {
-		 * System.out.println("L'erreur pour K = "+i+" est : "+d[i]); }
-		 */
 		return d;
 
 	}
@@ -412,8 +407,6 @@ public class Matrice {
 		double res = 0;
 
 		double[] affichage = new double[vp.length];
-		// J première(s) eigenface(s)
-		int j;
 
 		// On calcule s
 		for (int i = 0; i < vp.length; i++) {
@@ -425,11 +418,6 @@ public class Matrice {
 		for (int i = 0; i < vp.length; i++) {
 			res += 100 * vp[i] / s;
 			affichage[i] = res;
-
-			// Pour tester
-			// j=i+1;
-			// System.out.println("La variation cumulée par la/les "+j+" première(s)
-			// eigenface(s) est : "+res+" %");
 		}
 		return affichage;
 	}
