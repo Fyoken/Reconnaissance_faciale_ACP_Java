@@ -40,6 +40,11 @@ public class Main extends Application{
 				images.ajouterImage(image.getPhoto().transfoVect());
 			}	
 		}
+		images.centralisation();
+		images.matriceCovariance();
+		images.valeursPropres();
+		images.vecteursPropres();
+		images.matriceProjection();
 		return images;
 	}
 	
@@ -142,11 +147,7 @@ public class Main extends Application{
 	public static void main(String[] args) {
 		initialisationBDD();
 		Matrice images=initialisationMatriceImages();
-		images.centralisation();
-		images.matriceCovariance();
-		images.valeursPropres();
-		images.vecteursPropres();
-		images.matriceProjection();
+		images.affichageEigenfaces();
 		
 		// Test pour reconstruire la première image
 		//Vecteur test=images.reconstructionImage(0,images.getVecteursPropres().getColumnDimension());
