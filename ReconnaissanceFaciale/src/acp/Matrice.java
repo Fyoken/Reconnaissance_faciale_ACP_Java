@@ -84,7 +84,7 @@ public class Matrice {
 	public final void setMatriceProjection(Matrix matriceProjection) {
 		this.matriceProjection = matriceProjection;
 	}
-	
+
 	public Vecteur getMoy() {
 		return moy;
 	}
@@ -92,7 +92,6 @@ public class Matrice {
 	public void setMoy(Vecteur moy) {
 		this.moy = moy;
 	}
-
 
 	// methode d'initialisation de la matrice de covariance reduite
 	public void matriceCovariance() {
@@ -323,12 +322,12 @@ public class Matrice {
 		File f = new File("eigenfaces.jpg");
 
 		for (int i = 0; i < 6; i++) {
-			//creation d'un vecteur avec le i eme eigenface
+			// creation d'un vecteur avec le i eme eigenface
 			Vecteur eigenface = new Vecteur();
 			for (int j = 0; j < this.n; j++) {
 				eigenface.getPixels()[j] = new Pixel(this.vecteursPropres.get(j, i));
 			}
-			//recherche du min 
+			// recherche du min
 			double min = 0;
 			for (int k = 0; k < this.n; k++) {
 
@@ -364,70 +363,75 @@ public class Matrice {
 			System.err.println("Erreur écriture image");
 		}
 	}
-	
-	// Méthode pour afficher le graphique de l'évolution de l'erreur pour une image et pour différentes valeurs de K
-			public double[] affichageGraphique(Image img, int n) throws IOException {	
-					
-				Matrice JM = img.getPhoto();
-				double[] d = new double[this.getVecteursPropres().getColumnDimension()+1];
-					
-				// On transforme J en vecteur pour calculer la distance
-				Vecteur J=JM.transfoVect();
-				
-				// On inverse les valeurs de J
-				for (int i = 0; i < J.getNbLigne(); i++) {
-					J.getPixels()[i].setIntensite(1-J.getPixels()[i].getIntensite());
-				}
-				// Pour chaque valeur de K
-				for (int K = 1; K <= this.getVecteursPropres().getColumnDimension(); K++) {
-						
-					// On récupère l'image projetée Jp, le n correspond à dire que J est la n-ième image soumise à l'ACP
-					Vecteur Jp = this.reconstructionImage(n, K);
-					// On calcule la distance euclidienne entre J et Jp et on l'ajoute à la liste des erreurs
-					double s = 0;
-					for (int i = 0; i < Jp.getNbLigne(); i++) {
-						s+=Math.pow(J.getPixels()[i].getIntensite() - Jp.getPixels()[i].getIntensite(),2);
-					}
-					d[K] = Math.sqrt(s);
-				}
-					
-				// Test de l'affichage de chaque valeur de la liste
-				/*
-				for (int i = 1; i < d.length; i++) {
-					System.out.println("L'erreur pour K = "+i+" est : "+d[i]);
-				}
-				*/	
-				return d;
-					
+
+	// Méthode pour afficher le graphique de l'évolution de l'erreur pour une image
+	// et pour différentes valeurs de K
+	public double[] affichageGraphique(Image img, int n) {
+
+		Matrice JM = img.getPhoto();
+		double[] d = new double[this.getVecteursPropres().getColumnDimension() + 1];
+
+		// On transforme J en vecteur pour calculer la distance
+		Vecteur J = JM.transfoVect();
+
+		// On inverse les valeurs de J
+		for (int i = 0; i < J.getNbLigne(); i++) {
+			J.getPixels()[i].setIntensite(1 - J.getPixels()[i].getIntensite());
+		}
+		// Pour chaque valeur de K
+		for (int K = 1; K <= this.getVecteursPropres().getColumnDimension(); K++) {
+
+			// On récupère l'image projetée Jp, le n correspond à dire que J est la n-ième
+			// image soumise à l'ACP
+			Vecteur Jp = this.reconstructionImage(n, K);
+			// On calcule la distance euclidienne entre J et Jp et on l'ajoute à la liste
+			// des erreurs
+			double s = 0;
+			for (int i = 0; i < Jp.getNbLigne(); i++) {
+				s += Math.pow(J.getPixels()[i].getIntensite() - Jp.getPixels()[i].getIntensite(), 2);
 			}
-			
-			// Méthode pour normaliser les valeurs propres et afficher l'évolution de la variance cumulée des eigenfaces
-			public double[] normaliserEtAfficherVariation(double[] vp) {
-				// Valeur de normalisation qui vaut la somme des valeurs propres
-				double s = 0;
-				
-				// Variance cumulée
-				double res = 0;
-				
-				double[] affichage = new double[vp.length];
-				// J première(s) eigenface(s)
-				int j;
-				
-				// On calcule s
-				for (int i = 0; i < vp.length; i++) {
-					s+=vp[i];
-				}
-				
-				// On normalise les valeurs propres et affiche l'évolution de la variation cumulée
-				for (int i = 0; i < vp.length; i++) {
-					res+=100*vp[i]/s;
-					affichage[i] = res;
-					
-					// Pour tester
-					//j=i+1;
-					//System.out.println("La variation cumulée par la/les "+j+" première(s) eigenface(s) est : "+res+" %");
-				}
-				return affichage;
-			}
+			d[K] = Math.sqrt(s);
+		}
+
+		// Test de l'affichage de chaque valeur de la liste
+		/*
+		 * for (int i = 1; i < d.length; i++) {
+		 * System.out.println("L'erreur pour K = "+i+" est : "+d[i]); }
+		 */
+		return d;
+
+	}
+
+	// Méthode pour normaliser les valeurs propres et afficher l'évolution de la
+	// variance cumulée des eigenfaces
+	public double[] normaliserEtAfficherVariation(double[] vp) {
+		// Valeur de normalisation qui vaut la somme des valeurs propres
+		double s = 0;
+
+		// Variance cumulée
+		double res = 0;
+
+		double[] affichage = new double[vp.length];
+		// J première(s) eigenface(s)
+		int j;
+
+		// On calcule s
+		for (int i = 0; i < vp.length; i++) {
+			s += vp[i];
+		}
+
+		// On normalise les valeurs propres et affiche l'évolution de la variation
+		// cumulée
+		for (int i = 0; i < vp.length; i++) {
+			res += 100 * vp[i] / s;
+			affichage[i] = res;
+
+			// Pour tester
+			// j=i+1;
+			// System.out.println("La variation cumulée par la/les "+j+" première(s)
+			// eigenface(s) est : "+res+" %");
+		}
+		return affichage;
+	}
 
 }
