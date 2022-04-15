@@ -347,13 +347,13 @@ public class Matrice {
 						valeurIntensite = 1;
 					}
 					// On convertit la valeur du pixel en couleur
-					Color couleur = new Color((int) (valeurIntensite * 255d) * 10, (int) (valeurIntensite * 255d) * 10,
-							(int) (valeurIntensite * 255d) * 10);
+					Color couleur = new Color((int) (valeurIntensite * 255d) * 5, (int) (valeurIntensite * 255d) * 5,
+							(int) (valeurIntensite * 255d) * 5);
 					int gris = couleur.getRGB();
 					if (i < 3)
-						eigenfaces.setRGB(k + 10 + 150 * i, j + 10, gris);
+						eigenfaces.setRGB(k + 10 + 75 * i, j + 10, gris);
 					else
-						eigenfaces.setRGB(k + 10 + 150 * (i - 3), j + 150, gris);
+						eigenfaces.setRGB(k + 10 + 75 * (i - 3), j + 75, gris);
 				}
 			}
 		}

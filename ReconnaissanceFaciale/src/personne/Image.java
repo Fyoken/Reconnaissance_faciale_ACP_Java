@@ -21,6 +21,7 @@ public class Image {
 	public Image(String nomImage) {
 		this.nomImage = nomImage;
 		this.photo =  new Matrice(50,50);
+		this.changeSize();
 		this.transformationNiveauGris();
 	}
 	public Image(String nomImage, Matrice mat) {
@@ -108,6 +109,7 @@ public class Image {
 	//test
 	public static void main(String[] args) {
 		Image image = new Image("../BDD/Train/SALL_Marieme/SALL_Marieme_2.jpg");
+		image.changeSize();
 		image.getPhoto().affichage();
 	}
 	

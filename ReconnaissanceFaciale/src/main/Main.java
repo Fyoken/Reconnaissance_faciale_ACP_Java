@@ -173,7 +173,7 @@ public class Main extends Application{
 		double[] res = images.normaliserEtAfficherVariation(vp);
 		
 		// Première image de la base de référence pour le calcul de l'erreur
-		Image image = new Image("../BDD/Train/CHAMBAS_Mathilde/CHAMBAS_Mathilde_3.jpg");
+		Image image = new Image("../BDD/Train/LASGLEIZES_David/LASGLEIZES_David_3.jpg");
 		
 
 		// Image de la bonne personne mais avec une image de test pour le calcul de l'erreur
