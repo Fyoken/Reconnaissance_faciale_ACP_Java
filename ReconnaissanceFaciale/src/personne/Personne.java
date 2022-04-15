@@ -26,6 +26,16 @@ public class Personne{
 	public static final Personne ChambasM=new Personne("CHAMBAS","Mathilde");
 	public static final Personne RibayneM=new Personne("RIBAYNE","Maxime");
 	public static final Personne SallM=new Personne("SALL","Marieme");
+	public static final Personne BertailsC=new Personne("BERTAILS","Clement");
+	public static final Personne BlondeyB=new Personne("BLONDEY","Benjamin");
+	public static final Personne DonneyV=new Personne("DONNEY","Vincent");
+	public static final Personne JousselinH=new Personne("JOUSSELIN","Hugo");
+	public static final Personne LamyM=new Personne("LAMY","Martin");
+	public static final Personne LasgleizesD=new Personne("LASGLEIZES","David");
+	public static final Personne MongourM=new Personne("MONGOUR","Mateo");
+	public static final Personne RibasJ=new Personne("RIBAS","Justine");
+	public static final Personne RodriguesS=new Personne("RODRIGUES","Samuel");
+	
 	
 	//Get et Set pour le prénom
 	public String getNom() {
