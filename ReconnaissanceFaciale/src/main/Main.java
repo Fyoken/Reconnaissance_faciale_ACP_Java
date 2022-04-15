@@ -49,6 +49,7 @@ public class Main extends Application{
 				images.ajouterImage(image.getPhoto().transfoVect());
 			}	
 		}
+		images.moyenne();
 		images.centralisation();
 		images.matriceCovariance();
 		images.valeursPropres();
