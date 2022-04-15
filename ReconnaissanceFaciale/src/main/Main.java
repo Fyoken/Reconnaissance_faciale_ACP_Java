@@ -163,32 +163,32 @@ public class Main extends Application{
 		double[] res = images.normaliserEtAfficherVariation(vp);
 		
 		// Première image de la base de référence pour le calcul de l'erreur
-		Image image = new Image("../BDD/Train/CHAMBAS_Mathilde/CHAMBAS_Mathilde_4.jpg");
+		Image image = new Image("../BDD/Train/CHAMBAS_Mathilde/CHAMBAS_Mathilde_3.jpg");
 		
 
 		// Image de la bonne personne mais avec une image de test pour le calcul de l'erreur
 		//Image image = new Image("../BDD/Test/3.jpg");
 		
 		// On récupère les valeurs des erreurs en fonction de K
-		double[] d = new double[images.getVecteursPropres().getColumnDimension()];
 		try {
 			// On compare image à la première image de la base
-			d = images.affichageGraphique(image,0);
+			double[] d = images.affichageGraphique(image,0);
+			// On ajoute toutes les valeurs de distances puis la variance cumulée en fonction de K dans une chaîne
+	    	String[] s = new String[d.length+res.length];
+	    	for (int i = 0; i < d.length; i++) {
+	    		s[i]=""+d[i];
+	    	}
+	    	for (int i = d.length; i < s.length; i++) {
+	    		s[i]=""+res[i-d.length];
+	    	}
+	    	
+	    	// On lance la méthode start avec notre paramètre et on affiche les deux graphiques
+	    	launch(s); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		// On ajoute toutes les valeurs de distances puis la variance cumulée en fonction de K dans une chaîne
-    	String[] s = new String[d.length+res.length];
-    	for (int i = 0; i < d.length; i++) {
-    		s[i]=""+d[i];
-    	}
-    	for (int i = d.length; i < s.length; i++) {
-    		s[i]=""+res[i-d.length];
-    	}
-    	
-    	// On lance la méthode start avec notre paramètre et on affiche les deux graphiques
-    	launch(s); 
+	
 		
 	}
 }
