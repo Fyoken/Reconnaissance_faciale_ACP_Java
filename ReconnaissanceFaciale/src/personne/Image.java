@@ -20,7 +20,7 @@ public class Image {
 	//Constructeur
 	public Image(String nomImage) {
 		this.nomImage = nomImage;
-		this.photo =  new Matrice(100,100);
+		this.photo =  new Matrice(50,50);
 		this.transformationNiveauGris();
 	}
 	public Image(String nomImage, Matrice mat) {
@@ -51,8 +51,8 @@ public class Image {
 		//OutImg est l'image après modifications
 		outImg = this.getNomImage();
 		//La taille de l'image après modification sera de 70x70
-		w = 70;
-		h = 70;
+		w = 50;
+		h = 50;
 		
 		// lit l'image d'entrée
 		File f = new File(this.getNomImage());

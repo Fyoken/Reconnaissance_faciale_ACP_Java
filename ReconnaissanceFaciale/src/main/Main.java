@@ -43,7 +43,7 @@ public class Main extends Application{
 	}
 	
 	public static Matrice initialisationMatriceImages() {
-		Matrice images= new Matrice(100*100,bdd.size()*Personne.AuzollesM.getImages().size());
+		Matrice images= new Matrice(50*50,bdd.size()*Personne.AuzollesM.getImages().size());
 		for (Personne personne : bdd) {
 			for (Image image : personne.getImages()) {
 				images.ajouterImage(image.getPhoto().transfoVect());

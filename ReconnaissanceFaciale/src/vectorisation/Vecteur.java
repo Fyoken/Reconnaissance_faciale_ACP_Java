@@ -14,7 +14,7 @@ public class Vecteur {
 	public Pixel[] v;	
 	
 	public Vecteur() {
-		v = new Pixel[10000];
+		v = new Pixel[2500];
 	}
 	
 	public int getNbLigne() {
@@ -27,7 +27,7 @@ public class Vecteur {
 	
 	
 	public Matrice transfoMat() {
-		Matrice matrice = new Matrice(100, 100);
+		Matrice matrice = new Matrice(50,50);
 		 int k = 0;
 		 for (int i = 0; i<matrice.getN(); i++) {
 			 for (int j = 0; j < matrice.getM(); j++) {
