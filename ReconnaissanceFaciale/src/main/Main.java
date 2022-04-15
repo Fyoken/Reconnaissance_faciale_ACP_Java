@@ -31,6 +31,15 @@ public class Main extends Application{
 		bdd.add(Personne.ChambasM);
 		bdd.add(Personne.RibayneM);
 		bdd.add(Personne.SallM);
+		bdd.add(Personne.BertailsC);
+		bdd.add(Personne.BlondeyB);
+		bdd.add(Personne.DonneyV);
+		bdd.add(Personne.JousselinH);
+		bdd.add(Personne.LamyM);
+		bdd.add(Personne.LasgleizesD);
+		bdd.add(Personne.MongourM);
+		bdd.add(Personne.RibasJ);
+		bdd.add(Personne.RodriguesS);
 	}
 	
 	public static Matrice initialisationMatriceImages() {
