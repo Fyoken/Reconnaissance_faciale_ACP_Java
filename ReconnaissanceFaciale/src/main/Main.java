@@ -142,6 +142,7 @@ public class Main extends Application{
 	public static void main(String[] args) {
 		initialisationBDD();
 		Matrice images=initialisationMatriceImages();
+		images.moyenne();
 		images.centralisation();
 		images.matriceCovariance();
 		images.valeursPropres();
@@ -149,9 +150,9 @@ public class Main extends Application{
 		images.matriceProjection();
 		
 		// Test pour reconstruire la première image
-		//Vecteur test=images.reconstructionImage(0,images.getVecteursPropres().getColumnDimension());
-		//test.transfoMat().affichage();
-		
+		Vecteur test=images.reconstructionImage(0,images.getVecteursPropres().getColumnDimension());
+		test.transfoMat().affichage();
+		System.out.println("Done");
 		double[] vp = images.valeursPropres();
 		
 		
@@ -159,10 +160,11 @@ public class Main extends Application{
 		double[] res = images.normaliserEtAfficherVariation(vp);
 		
 		// Première image de la base de référence pour le calcul de l'erreur
-		//Image image = new Image("../BDD/Train/CHAMBAS_Mathilde/CHAMBAS_Mathilde_3.jpg");
+		Image image = new Image("../BDD/Train/CHAMBAS_Mathilde/CHAMBAS_Mathilde_4.jpg");
 		
+
 		// Image de la bonne personne mais avec une image de test pour le calcul de l'erreur
-		Image image = new Image("../BDD/Test/3.jpg");
+		//Image image = new Image("../BDD/Test/3.jpg");
 		
 		// On récupère les valeurs des erreurs en fonction de K
 		double[] d = new double[images.getVecteursPropres().getColumnDimension()];
@@ -184,7 +186,6 @@ public class Main extends Application{
     	
     	// On lance la méthode start avec notre paramètre et on affiche les deux graphiques
     	launch(s); 
-		
 		
 	}
 }

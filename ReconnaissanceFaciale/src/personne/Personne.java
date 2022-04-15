@@ -67,6 +67,7 @@ public class Personne{
 	}
 	
 	//Test
+	/*
 	public static void main(String[] args) {
 		Image image = new Image("../BDD/Train/AUZOLLES_Melina/AUZOLLES_Melina_1.jpg");
 		Set<Image> set = new HashSet<Image>();
@@ -75,5 +76,6 @@ public class Personne{
 		
 		System.out.println(Personne.ChambasM.images);
 	}
+	*/
 	
 }

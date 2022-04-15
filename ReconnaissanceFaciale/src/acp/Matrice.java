@@ -185,7 +185,7 @@ public class Matrice {
 		Vecteur imageI = new Vecteur();
 
 		for (int j = 0; j < this.vecteursPropres.getRowDimension(); j++) {
-			// initialisation des pixels de le vecteur de retour
+			// initialisation des pixels du vecteur de retour
 			imageI.getPixels()[j] = new Pixel(0);
 			// calcul de la valeur de l'intensite
 			for (int k = 0; k < K; k++) {
@@ -216,7 +216,7 @@ public class Matrice {
 			}
 			moy.getPixels()[i].setIntensite(moy.getPixels()[i].getIntensite() / this.m);
 		}
-
+		this.setMoy(moy);
 		return moy;
 	}
 
@@ -225,7 +225,7 @@ public class Matrice {
 		// creation d'une matrice de pixel
 		Pixel[][] A = new Pixel[this.n][this.m];
 		// recuperation de la moyenne
-		Vecteur moy = this.moyenne();
+		Vecteur moy = this.getMoy();
 
 		for (int i = 0; i < this.n; i++) {
 			for (int j = 0; j < this.m; j++) {
@@ -259,7 +259,7 @@ public class Matrice {
 	public void affichage() {
 		// Déclaration des variables
 		// Création de l'image
-		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_BYTE_GRAY);
 		// Création du fichier qui va stocker l'image
 		File f = new File("Image.jpg");
 		// recherche du minimum
