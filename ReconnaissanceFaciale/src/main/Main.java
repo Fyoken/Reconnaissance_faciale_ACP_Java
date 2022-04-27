@@ -1,7 +1,6 @@
 package main;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +21,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -33,8 +31,6 @@ import vectorisation.Vecteur;
 
 public class Main extends Application {
 	public static Set<Personne> bdd = new HashSet<Personne>();
-	
-	Scene scene_principale, affichage_err, affichage_ir;
 
 	public static void initialisationBDD() {
 		bdd.add(Personne.AuzollesM);
@@ -85,27 +81,34 @@ public class Main extends Application {
 		Button eigenfaces = new Button("Afficher les 6 premières eigenfaces");
 		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
 		Button testerUneImage = new Button("Choisir une image à tester");
-	
-		VBox informations = new VBox();
-		informations.getChildren().addAll(imageView,texte);
-
+		
+		
+		eigenfaces.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent action) {
+				// TODO Auto-generated method stub
+				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
+				imageView.setImage(image);
+				texte.setText("Les 6 premiers eigenfaces");
+				
+			}
+		});
+		
 		VBox boutons = new VBox();
 		boutons.getChildren().addAll(imageReconstruite,eigenfaces,grapheErreurs,testerUneImage);
+		
+		VBox informations = new VBox();
+		informations.getChildren().addAll(imageView,texte);
 		
 		HBox general= new HBox();
 		general.getChildren().addAll(informations,boutons);
 		
-		File img_f = new File("Image.jpg");
-		String localUrl = img_f.toURI().toString();
-		
-		Image img = new Image(localUrl);
-		ImageView image_r = new ImageView(img);
-		
-		HBox reconstruite = new HBox();
-		reconstruite.getChildren().addAll(image_r);
-		
-		affichage_ir = new Scene(reconstruite);
-		
+		Scene scene = new Scene(general);
+		stage.setScene(scene);
+		stage.sizeToScene();
+		stage.show();
+		/*
 		// On récupère les distances et les points de la courbe
 		List<String> distPoint = getParameters().getUnnamed();
 
@@ -178,56 +181,26 @@ public class Main extends Application {
 		for (int i = tailleDist; i < distPoint.size(); i++) {
 			seriesVar.getData().add(new XYChart.Data<Number, Number>(i + 1 - tailleDist, Double.parseDouble(distPoint.get(i))));
 		}
-		
-		/* Pour la courbe */
-		BorderPane courbe = new BorderPane();
-		courbe.setCenter(areaChart);
+
+		// Montage de l'interface et affichage des deux graphiques
+
+		// On crée un deuxième Stage pour la courbe, on ajoute tout et on l'affiche
+		Stage stage = new Stage();
+		stage.setTitle("Courbe de la variance cumulée des K premières valeurs propres");
+		Scene sceneVar = new Scene(areaChart, 400, 300);
 		areaChart.getData().addAll(seriesVar);
-		courbe.setPrefSize(400, 300);
-		
-		/* Pour l'histogramme */
-		StackPane histo = new StackPane();
-		histo.getChildren().add(chart);
-		histo.setPrefSize(500, 450);
-
-		/* HBox avec les 2 graphes qu'on ajoute */
-		HBox graphes = new HBox();
-		graphes.getChildren().addAll(courbe, histo);
-		
-		/* Pour changer de scene et aller sur celle de l'image reconstruite */
-		
-		imageReconstruite.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				informations.getChildren().remove(0);
-				informations.getChildren().remove(0);
-				informations.getChildren().addAll(texte, image_r);
-			}
-		});
-		
-		/* Pour changer de scene et aller sur celle des graphes d'erreur */
-		
-		grapheErreurs.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				informations.getChildren().remove(0);
-				informations.getChildren().remove(0);
-				informations.getChildren().addAll(texte, graphes);
-			}
-		});
-
-		/* La scène principale, la première sur laquelle on est et celle sur laquelle on peut revenir */
-		scene_principale = new Scene(general);
-		stage.setScene(scene_principale);
-		stage.sizeToScene();
+		stage.setScene(sceneVar);
 		stage.show();
-	}
-	
-	class AffichageErreurs implements EventHandler<ActionEvent> {
-		@Override
-		public void handle(ActionEvent event) {
-			System.out.println("test erreur");
-		}
+
+		// On ajoute toutes les valeurs de notre histogramme à notre Stage passé en
+		// paramètre
+		final StackPane root = new StackPane();
+		root.getChildren().add(chart);
+		final Scene scene = new Scene(root, 500, 450);
+		primaryStage.setTitle("Évolution des distances euclidiennes (l'erreur) en fonction de K");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		*/
 	}
 
 	public static void main(String[] args) {
