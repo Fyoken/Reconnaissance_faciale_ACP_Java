@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.Set;
 
 import acp.Matrice;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
@@ -14,9 +17,16 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import personne.Image;
+
 import personne.Personne;
 import vectorisation.Vecteur;
 
@@ -42,8 +52,8 @@ public class Main extends Application {
 
 	public static Matrice initialisationMatriceImages() {
 		Matrice images = new Matrice(50 * 50, bdd.size() * Personne.AuzollesM.getImages().size());
-		for (Personne personne : bdd) {
-			for (Image image : personne.getImages()) {
+		for (Personne personneBDD : bdd) {
+			for (personne.Image image : personneBDD.getImages()) {
 				images.ajouterImage(image.getPhoto().transfoVect());
 			}
 		}
@@ -57,7 +67,40 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage stage) {
+		stage.setTitle("Logiciel de reconnaissance faciale | Groupe 5");
+
+		File fichier = new File("image_base.png");
+		Image image = new Image(fichier.toURI().toString());
+		ImageView imageView = new ImageView(image);
+		imageView.setFitHeight(150);
+		imageView.setPreserveRatio(true);
+
+		Label texte = new Label("Projet sur la reconnaissance faciale");
+
+		Button imageReconstruite = new Button("Afficher l'image reconstruite");
+		Button eigenfaces = new Button("Afficher les 6 premières eigenfaces");
+		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
+		Button testerUneImage = new Button("Choisir une image à tester");
+
+		File img_f = new File("../BDD/Train/LASGLEIZES_David/LASGLEIZES_David_3.jpg");
+		String localUrl = img_f.toURI().toString();
+
+		Image img = new Image(localUrl);
+		ImageView image_r = new ImageView(img);
+		image_r.setFitHeight(150);
+		image_r.setPreserveRatio(true);
+
+
+		VBox boutons = new VBox();
+		boutons.getChildren().addAll(imageReconstruite, eigenfaces, grapheErreurs, testerUneImage);
+
+		VBox informations = new VBox();
+		informations.getChildren().addAll(imageView, texte);
+
+		HBox general = new HBox();
+		general.getChildren().addAll(informations, boutons);
+		general.setPrefSize(1200, 500);
 
 		// On récupère les distances et les points de la courbe
 		List<String> distPoint = getParameters().getUnnamed();
@@ -129,27 +172,76 @@ public class Main extends Application {
 
 		// On ajoute toutes les valeurs
 		for (int i = tailleDist; i < distPoint.size(); i++) {
-			seriesVar.getData().add(new XYChart.Data<Number, Number>(i + 1 - tailleDist, Double.parseDouble(distPoint.get(i))));
+			seriesVar.getData()
+					.add(new XYChart.Data<Number, Number>(i + 1 - tailleDist, Double.parseDouble(distPoint.get(i))));
 		}
 
-		// Montage de l'interface et affichage des deux graphiques
-
-		// On crée un deuxième Stage pour la courbe, on ajoute tout et on l'affiche
-		Stage stage = new Stage();
-		stage.setTitle("Courbe de la variance cumulée des K premières valeurs propres");
-		Scene sceneVar = new Scene(areaChart, 400, 300);
+		/* Pour la courbe */
+		BorderPane courbe = new BorderPane();
+		courbe.setCenter(areaChart);
 		areaChart.getData().addAll(seriesVar);
-		stage.setScene(sceneVar);
-		stage.show();
+		courbe.setPrefSize(400, 300);
 
-		// On ajoute toutes les valeurs de notre histogramme à notre Stage passé en
-		// paramètre
-		final StackPane root = new StackPane();
-		root.getChildren().add(chart);
-		final Scene scene = new Scene(root, 500, 450);
-		primaryStage.setTitle("Évolution des distances euclidiennes (l'erreur) en fonction de K");
-		primaryStage.setScene(scene);
-		primaryStage.show();
+		/* Pour l'histogramme */
+		StackPane histo = new StackPane();
+		histo.getChildren().add(chart);
+		histo.setPrefSize(500, 450);
+
+		/* HBox avec les 2 graphes qu'on ajoute */
+		HBox graphes = new HBox();
+		graphes.getChildren().addAll(courbe, histo);
+
+		/* Pour changer de scene et aller sur celle de l'image reconstruite */
+
+		imageReconstruite.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				informations.getChildren().remove(0);
+				informations.getChildren().remove(0);
+				Image image = new Image(new File("Image.jpg").toURI().toString());
+				imageView.setImage(image);
+				HBox images = new HBox();
+				images.getChildren().addAll(imageView,image_r);
+				texte.setText("Visage de la base de donnée reconstruit");
+				informations.getChildren().addAll(texte, images);
+			}
+		});
+
+		eigenfaces.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				informations.getChildren().remove(0);
+				informations.getChildren().remove(0);
+				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
+				imageView.setImage(image);
+				texte.setText("Les 6 premiers eigenfaces");
+				informations.getChildren().addAll(texte, imageView);
+
+
+			}
+		});
+
+		/* Pour changer de scene et aller sur celle des graphes d'erreur */
+
+		grapheErreurs.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				informations.getChildren().remove(0);
+				informations.getChildren().remove(0);
+				informations.getChildren().addAll(texte, graphes);
+			}
+		});
+
+		/*
+		 * La scène principale, la première sur laquelle on est et celle sur laquelle on
+		 * peut revenir
+		 */
+		Scene scene = new Scene(general);
+		stage.setScene(scene);
+		stage.sizeToScene();
+		stage.show();
 	}
 
 	public static void main(String[] args) {
@@ -168,7 +260,7 @@ public class Main extends Application {
 		double[] res = images.normaliserEtAfficherVariation(vp);
 
 		// Première image de la base de référence pour le calcul de l'erreur
-		Image image = new Image("../BDD/Train/LASGLEIZES_David/LASGLEIZES_David_3.jpg");
+		personne.Image image = new personne.Image("../BDD/Train/LASGLEIZES_David/LASGLEIZES_David_3.jpg");
 
 		// Image de la bonne personne mais avec une image de test pour le calcul de
 		// l'erreur
