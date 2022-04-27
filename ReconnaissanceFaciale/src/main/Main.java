@@ -100,6 +100,7 @@ public class Main extends Application {
 
 		HBox general = new HBox();
 		general.getChildren().addAll(informations, boutons);
+		general.setPrefSize(1200, 500);
 
 		// On récupère les distances et les points de la courbe
 		List<String> distPoint = getParameters().getUnnamed();
