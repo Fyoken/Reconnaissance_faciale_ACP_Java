@@ -8,6 +8,8 @@ import java.util.Set;
 
 import acp.Matrice;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
@@ -70,6 +72,8 @@ public class Main extends Application {
 		File fichier =  new File("image_base.png");
 		Image image = new Image(fichier.toURI().toString());
 		ImageView imageView = new ImageView(image);
+		imageView.setFitHeight(500);
+		imageView.setPreserveRatio(true);
 		
 		Label texte = new Label("Projet sur la reconnaissance faciale");
 		
@@ -77,6 +81,19 @@ public class Main extends Application {
 		Button eigenfaces = new Button("Afficher les 6 premières eigenfaces");
 		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
 		Button testerUneImage = new Button("Choisir une image à tester");
+		
+		
+		eigenfaces.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent action) {
+				// TODO Auto-generated method stub
+				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
+				imageView.setImage(image);
+				texte.setText("Les 6 premiers eigenfaces");
+				
+			}
+		});
 		
 		VBox boutons = new VBox();
 		boutons.getChildren().addAll(imageReconstruite,eigenfaces,grapheErreurs,testerUneImage);
@@ -90,7 +107,6 @@ public class Main extends Application {
 		Scene scene = new Scene(general);
 		stage.setScene(scene);
 		stage.sizeToScene();
-		stage.setResizable(false);
 		stage.show();
 		/*
 		// On récupère les distances et les points de la courbe
