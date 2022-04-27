@@ -22,6 +22,33 @@ public class Matrice {
 	private Matrix vecteursPropres;
 	private Matrix matriceProjection;
 	private Vecteur moy;
+	private String[] noms;
+	private Matrix matriceVisage;
+	private Pixel[][] matriceCentralisee;
+
+	public Pixel[][] getMatriceCentralisee() {
+		return matriceCentralisee;
+	}
+
+	public void setMatriceCentralisee(Pixel[][] matriceCentralisee) {
+		this.matriceCentralisee = matriceCentralisee;
+	}
+
+	public Matrix getMatriceVisage() {
+		return matriceVisage;
+	}
+
+	public void setMatriceVisage(Matrix matriceVisage) {
+		this.matriceVisage = matriceVisage;
+	}
+
+	public String[] getNoms() {
+		return noms;
+	}
+
+	public void setNoms(String[] noms) {
+		this.noms = noms;
+	}
 
 	public Matrice(int n, int m) {
 		this.n = n;
@@ -93,6 +120,23 @@ public class Matrice {
 		this.moy = moy;
 	}
 
+	// methode d'initialisation de la liste des noms
+	public void noms(String[] noms) {
+		setNoms(noms);
+	}
+
+	// methode d'initialisation de la matrice de visage
+	public void matriceVisage() {
+		// creation d'une nouvelle matrice carre de la taille des colonnes de la matrice
+		Matrix mVis = new Matrix(this.n, this.m);
+		for (int i = 0; i < this.n; i++) {
+			for (int j = 0; j < this.m; j++) {
+				mVis.set(i, j, this.pixels[i][j].getIntensite());
+			}
+		}
+		this.setMatriceVisage(mVis);
+	}
+	
 	// methode d'initialisation de la matrice de covariance reduite
 	public void matriceCovariance() {
 		// creation d'une nouvelle matrice carre de la taille des colonnes de la matrice
@@ -235,6 +279,7 @@ public class Matrice {
 		}
 		// changement de la matrice image par celle centralisée
 		this.setPixels(A);
+		this.setMatriceCentralisee(A);
 	}
 
 	public Vecteur transfoVect() {
@@ -255,12 +300,12 @@ public class Matrice {
 	}
 
 	// Méthode pour afficher une matrice en niveau de gris
-	public void affichage() {
+	public void affichage(String name) {
 		// Déclaration des variables
 		// Création de l'image
 		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_BYTE_GRAY);
 		// Création du fichier qui va stocker l'image
-		File f = new File("Image.jpg");
+		File f = new File(name);
 		// recherche du minimum
 		double min = 0;
 		for (int i = 0; i < this.n; i++) {
@@ -313,7 +358,7 @@ public class Matrice {
 
 	public void affichageEigenfaces() {
 		// creation d'une grande image
-		BufferedImage eigenfaces = new BufferedImage(450, 350, BufferedImage.TYPE_INT_RGB);
+		BufferedImage eigenfaces = new BufferedImage(450, 350, BufferedImage.TYPE_BYTE_GRAY);
 		Graphics2D fond = eigenfaces.createGraphics();
 		fond.setColor(Color.white);
 		fond.fillRect(0, 0, 450, 350);
@@ -392,12 +437,6 @@ public class Matrice {
 			}
 			d[K] = Math.sqrt(s);
 		}
-
-		// Test de l'affichage de chaque valeur de la liste
-		/*
-		 * for (int i = 1; i < d.length; i++) {
-		 * System.out.println("L'erreur pour K = "+i+" est : "+d[i]); }
-		 */
 		return d;
 
 	}
@@ -413,7 +452,6 @@ public class Matrice {
 
 		double[] affichage = new double[vp.length];
 		// J première(s) eigenface(s)
-		int j;
 
 		// On calcule s
 		for (int i = 0; i < vp.length; i++) {
@@ -425,13 +463,119 @@ public class Matrice {
 		for (int i = 0; i < vp.length; i++) {
 			res += 100 * vp[i] / s;
 			affichage[i] = res;
-
-			// Pour tester
-			// j=i+1;
-			// System.out.println("La variation cumulée par la/les "+j+" première(s)
-			// eigenface(s) est : "+res+" %");
 		}
 		return affichage;
+	}
+
+	// Méthode qui projette une image
+	public Vecteur projection(Image img) {
+		// On centralise l'image à projeter
+		for (int i = 0; i < img.getPhoto().getN(); i++) {
+			for (int j = 0; j < img.getPhoto().getM(); j++) {
+				img.getPhoto().pixels[i][j].setIntensite(
+						img.getPhoto().pixels[i][j].getIntensite() - this.getMoy().getPixels()[i].getIntensite());
+			}
+		}
+		
+		Vecteur image = img.getPhoto().transfoVect();
+		double[] coords = new double[this.vecteursPropres.getColumnDimension()];
+		for (int k = 0; k < coords.length; k++) {
+			coords[k] = 0;
+			for(int i = 0; i < this.vecteursPropres.getRowDimension(); i++) {
+				coords[k]+=this.vecteursPropres.get(i, k)*image.getPixels()[i].getIntensite();
+			}
+		}
+		
+		Vecteur res = new Vecteur();
+		for (int j = 0; j < this.vecteursPropres.getRowDimension(); j++) {
+			// initialisation des pixels du vecteur de retour
+			res.getPixels()[j] = new Pixel(0);
+			// calcul de la valeur de l'intensite
+			for (int k = 0; k < this.vecteursPropres.getColumnDimension(); k++) {
+				res.getPixels()[j].setIntensite(res.getPixels()[j].getIntensite()
+						+coords[k]*this.vecteursPropres.get(j, k));
+			}
+			// ajout de la moyenne a l'image calculee
+			res.getPixels()[j]
+					.setIntensite(res.getPixels()[j].getIntensite() + this.getMoy().getPixels()[j].getIntensite());
+		}
+		res.transfoMat().affichage("TestProj.jpg");
+		
+		return res;
+	}
+
+	// Méthode qui stocke les projections des images de références
+	public void projectionReference() {
+		// On projette et stocke chaque image de référence
+		int n = (int) Math.sqrt(this.getMatriceVisage().getRowDimension());
+
+		// On crée le dossier reference s'il n'existe pas
+		File ref = new File("reference");
+		ref.mkdirs();
+
+		// On récupère la j ieme image
+		for (int j = 0; j < this.getVecteursPropres().getColumnDimension(); j++) {
+			Matrice imageM = new Matrice(n, n);
+			int z = 0;
+			for (int i = 0; i < n; i++) {
+				for (int k = 0; k < n; k++) {
+					imageM.pixels[i][k] = new Pixel(this.getMatriceVisage().get(z, j));
+					z++;
+				}
+			}
+
+			// On projette la j eme image et on la stocke
+			Vecteur proj = this.reconstructionImage(j, this.vecteursPropres.getColumnDimension());
+			Matrice projAffichage = proj.transfoMat();
+			projAffichage.affichage(ref.getPath() + "/" + j + ".jpg");
+
+		}
+	}
+
+	// Méthode qui calcule chacune des distances entre l'image test et les images de
+	// référence, elle renvoie la plus petite distance
+	public double reconnaissance(Image img) {
+		String[] noms = this.getNoms();
+		// Distance minimale
+		double d = Double.MAX_VALUE;
+
+		// Valeur de l'image la plus ressemblante
+		int val = 0;
+
+		// On projette l'image
+		Vecteur Jp = this.projection(img);
+
+		// On parcourt toutes nos images de référence déjà projetées et on calcule la
+		// distance
+		for (int i = 0; i < this.vecteursPropres.getColumnDimension(); i++) {
+			Image ref = new Image("reference/" + i + ".jpg");
+			Vecteur Ji = ref.getPhoto().transfoVect();
+			double s = 0;
+			for (int j = 0; j < Ji.getNbLigne(); j++) {
+				s += Math.pow(Jp.getPixels()[i].getIntensite() - Ji.getPixels()[i].getIntensite(), 2);
+			}
+			if (Math.sqrt(s) < d) {
+				d = Math.sqrt(s);
+				System.out.println("d = " + d);
+				val = i;
+			}
+
+		}
+
+		// Affichage selon la valeur de d
+		if (d > 0.5) {
+			System.out.println("Ce visage n'est pas dans la base de données");
+		} else {
+			// On récupère le nom associé à la bonne image
+			String nom = noms[val];
+			String[] nomSansUnderscore = nom.split("_", 2);
+			String[] chaineAvecNom = nomSansUnderscore[0].split("/");
+			String[] chaineAvecPrenom = nomSansUnderscore[1].split("/");
+			String personne = chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
+			System.out.println("Ce visage correspond à celui de " + personne);
+		}
+
+		return d;
 	}
 
 }

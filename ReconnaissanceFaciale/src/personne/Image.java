@@ -106,11 +106,6 @@ public class Image {
 	public String toString() {
 		return(this.getNomImage());
 	}
-	//test
-	public static void main(String[] args) {
-		Image image = new Image("../BDD/Train/SALL_Marieme/SALL_Marieme_2.jpg");
-		image.changeSize();
-		image.getPhoto().affichage();
-	}
+	
 	
 }

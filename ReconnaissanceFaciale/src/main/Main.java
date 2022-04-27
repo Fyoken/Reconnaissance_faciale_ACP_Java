@@ -43,11 +43,17 @@ public class Main extends Application {
 
 	public static Matrice initialisationMatriceImages() {
 		Matrice images = new Matrice(50 * 50, bdd.size() * Personne.AuzollesM.getImages().size());
+		String[] noms = new String[bdd.size() * Personne.AuzollesM.getImages().size()];
+		int i = 0;
 		for (Personne personne : bdd) {
 			for (Image image : personne.getImages()) {
 				images.ajouterImage(image.getPhoto().transfoVect());
+				noms[i] = image.getNomImage();
+				i++;
 			}
 		}
+		images.matriceVisage();
+		images.noms(noms);
 		images.moyenne();
 		images.centralisation();
 		images.matriceCovariance();
@@ -56,7 +62,7 @@ public class Main extends Application {
 		images.matriceProjection();
 		return images;
 	}
-
+	
 	@Override
 	public void start(Stage primaryStage) {
 
@@ -152,17 +158,23 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
-
+	
 	public static void main(String[] args) {
 		initialisationBDD();
+		Image test = new Image("../BDD/Train/AUZOLLES_Melina/AUZOLLES_Melina_1.jpg");
 		Matrice images = initialisationMatriceImages();
-
+		
+		images.projectionReference();
+		System.out.println("Projection de la base de référence réussie");
+		
+		
+		images.reconnaissance(test);
+		
+		/*
 		images.affichageEigenfaces();
-
-		// Test pour reconstruire la première image
-		Vecteur test = images.reconstructionImage(0, images.getVecteursPropres().getColumnDimension());
-		test.transfoMat().affichage();
-		System.out.println("Done");
+		*/
+		
+		/*
 		double[] vp = images.valeursPropres();
 
 		// Méthode qui donne la variance cumulée en fonction de K
@@ -192,6 +204,6 @@ public class Main extends Application {
 		// On lance la méthode start avec notre paramètre et on affiche les deux
 		// graphiques
 		launch(s);
-
+	*/
 	}
 }
