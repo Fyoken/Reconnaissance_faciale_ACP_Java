@@ -69,48 +69,38 @@ public class Main extends Application {
 	@Override
 	public void start(Stage stage) {
 		stage.setTitle("Logiciel de reconnaissance faciale | Groupe 5");
-		
-		File fichier =  new File("image_base.png");
+
+		File fichier = new File("image_base.png");
 		Image image = new Image(fichier.toURI().toString());
 		ImageView imageView = new ImageView(image);
-		imageView.setFitHeight(500);
+		imageView.setFitHeight(150);
 		imageView.setPreserveRatio(true);
-		
+
 		Label texte = new Label("Projet sur la reconnaissance faciale");
-		
+
 		Button imageReconstruite = new Button("Afficher l'image reconstruite");
 		Button eigenfaces = new Button("Afficher les 6 premières eigenfaces");
 		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
 		Button testerUneImage = new Button("Choisir une image à tester");
-		
-		
-		eigenfaces.setOnAction(new EventHandler<ActionEvent>() {
-			
-			@Override
-			public void handle(ActionEvent action) {
-				// TODO Auto-generated method stub
-				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
-				imageView.setImage(image);
-				texte.setText("Les 6 premiers eigenfaces");
-				
-			}
-		});
-		
-		File img_f = new File("Image.jpg");
+
+		File img_f = new File("../BDD/Train/LASGLEIZES_David/LASGLEIZES_David_3.jpg");
 		String localUrl = img_f.toURI().toString();
-		
+
 		Image img = new Image(localUrl);
 		ImageView image_r = new ImageView(img);
-		
+		image_r.setFitHeight(150);
+		image_r.setPreserveRatio(true);
+
+
 		VBox boutons = new VBox();
-		boutons.getChildren().addAll(imageReconstruite,eigenfaces,grapheErreurs,testerUneImage);
-		
+		boutons.getChildren().addAll(imageReconstruite, eigenfaces, grapheErreurs, testerUneImage);
+
 		VBox informations = new VBox();
-		informations.getChildren().addAll(imageView,texte);
-		
-		HBox general= new HBox();
-		general.getChildren().addAll(informations,boutons);
-		
+		informations.getChildren().addAll(imageView, texte);
+
+		HBox general = new HBox();
+		general.getChildren().addAll(informations, boutons);
+
 		// On récupère les distances et les points de la courbe
 		List<String> distPoint = getParameters().getUnnamed();
 
@@ -181,15 +171,16 @@ public class Main extends Application {
 
 		// On ajoute toutes les valeurs
 		for (int i = tailleDist; i < distPoint.size(); i++) {
-			seriesVar.getData().add(new XYChart.Data<Number, Number>(i + 1 - tailleDist, Double.parseDouble(distPoint.get(i))));
+			seriesVar.getData()
+					.add(new XYChart.Data<Number, Number>(i + 1 - tailleDist, Double.parseDouble(distPoint.get(i))));
 		}
-		
+
 		/* Pour la courbe */
 		BorderPane courbe = new BorderPane();
 		courbe.setCenter(areaChart);
 		areaChart.getData().addAll(seriesVar);
 		courbe.setPrefSize(400, 300);
-		
+
 		/* Pour l'histogramme */
 		StackPane histo = new StackPane();
 		histo.getChildren().add(chart);
@@ -198,20 +189,41 @@ public class Main extends Application {
 		/* HBox avec les 2 graphes qu'on ajoute */
 		HBox graphes = new HBox();
 		graphes.getChildren().addAll(courbe, histo);
-		
+
 		/* Pour changer de scene et aller sur celle de l'image reconstruite */
-		
+
 		imageReconstruite.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				informations.getChildren().remove(0);
 				informations.getChildren().remove(0);
-				informations.getChildren().addAll(texte, image_r);
+				Image image = new Image(new File("Image.jpg").toURI().toString());
+				imageView.setImage(image);
+				HBox images = new HBox();
+				images.getChildren().addAll(imageView,image_r);
+				texte.setText("Visage de la base de donnée reconstruit");
+				informations.getChildren().addAll(texte, images);
 			}
 		});
-		
+
+		eigenfaces.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				// TODO Auto-generated method stub
+				informations.getChildren().remove(0);
+				informations.getChildren().remove(0);
+				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
+				imageView.setImage(image);
+				texte.setText("Les 6 premiers eigenfaces");
+				informations.getChildren().addAll(texte, imageView);
+
+
+			}
+		});
+
 		/* Pour changer de scene et aller sur celle des graphes d'erreur */
-		
+
 		grapheErreurs.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -221,7 +233,10 @@ public class Main extends Application {
 			}
 		});
 
-		/* La scène principale, la première sur laquelle on est et celle sur laquelle on peut revenir */
+		/*
+		 * La scène principale, la première sur laquelle on est et celle sur laquelle on
+		 * peut revenir
+		 */
 		Scene scene = new Scene(general);
 		stage.setScene(scene);
 		stage.sizeToScene();
