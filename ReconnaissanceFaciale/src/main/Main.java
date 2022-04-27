@@ -76,6 +76,8 @@ public class Main extends Application {
 		File fichier =  new File("image_base.png");
 		Image image = new Image(fichier.toURI().toString());
 		ImageView imageView = new ImageView(image);
+		imageView.setFitHeight(500);
+		imageView.setPreserveRatio(true);
 		
 		Label texte = new Label("Projet sur la reconnaissance faciale");
 		
