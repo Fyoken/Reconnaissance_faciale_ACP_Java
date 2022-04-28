@@ -468,13 +468,25 @@ public class Matrice {
 	}
 
 	// Méthode qui projette une image
+<<<<<<< HEAD
 	public double[] projection(Image img, int K) {
+=======
+	public double[] projection(Image img) {
+		// On centralise l'image à projeter
+		/*for (int i = 0; i < img.getPhoto().getN(); i++) {
+			for (int j = 0; j < img.getPhoto().getM(); j++) {
+				img.getPhoto().pixels[i][j].setIntensite(
+						img.getPhoto().pixels[i][j].getIntensite() - this.moy.getPixels()[i].getIntensite());
+			}
+		}*/
+>>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
 		//creation d'un vecteur a partir de l'image
 		Vecteur image = img.getPhoto().transfoVect();
 		//inversion des valeurs et centralisation
 		for(int i=0;i<image.getNbLigne();i++) {
 			image.getPixels()[i].setIntensite(1-image.getPixels()[i].getIntensite());
 			image.getPixels()[i].setIntensite(image.getPixels()[i].getIntensite()- this.moy.getPixels()[i].getIntensite());
+<<<<<<< HEAD
 		}
 
 		double[] projection = new double[K];
@@ -485,9 +497,47 @@ public class Matrice {
 			for (int i = 0; i < image.getNbLigne(); i++) {
 				projection[k] += image.getPixels()[i].getIntensite() * this.vecteursPropres.get(i, k);
 			}
+=======
+>>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
+		}
+
+<<<<<<< HEAD
+		return projection;
+=======
+		double[] projection = new double[6];
+		// calcul de la projection de l'image dans la base des vecteurs propres
+		for (int k = 0; k < projection.length; k++) {
+			projection[k] = 0;
+
+			for (int i = 0; i < image.getNbLigne(); i++) {
+				projection[k] += image.getPixels()[i].getIntensite() * this.vecteursPropres.get(i, k);
+			}
+
 		}
 
 		return projection;
+		/*
+		 * double[] coords = new double[this.vecteursPropres.getColumnDimension()]; for
+		 * (int k = 0; k < coords.length; k++) { coords[k] = 0; for(int i = 0; i <
+		 * this.vecteursPropres.getRowDimension(); i++) {
+		 * coords[k]+=this.vecteursPropres.get(i,
+		 * k)*image.getPixels()[i].getIntensite(); } }
+		 * 
+		 * Vecteur res = new Vecteur(); for (int j = 0; j <
+		 * this.vecteursPropres.getRowDimension(); j++) { // initialisation des pixels
+		 * du vecteur de retour res.getPixels()[j] = new Pixel(0); // calcul de la
+		 * valeur de l'intensite for (int k = 0; k <
+		 * this.vecteursPropres.getColumnDimension(); k++) {
+		 * res.getPixels()[j].setIntensite(res.getPixels()[j].getIntensite()
+		 * +coords[k]*this.vecteursPropres.get(j, k)); } // ajout de la moyenne a
+		 * l'image calculee res.getPixels()[j]
+		 * .setIntensite(res.getPixels()[j].getIntensite() +
+		 * this.getMoy().getPixels()[j].getIntensite()); }
+		 * res.transfoMat().affichage("TestProj.jpg");
+		 * 
+		 * return res;
+		 */
+>>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
 	}
 
 	// Méthode qui stocke les projections des images de références
@@ -517,10 +567,50 @@ public class Matrice {
 
 		}
 	}
+<<<<<<< HEAD
 	//methode pour trouver l'image la plus ressemblante a celle passée en parametre
 	public int reconnaissance(Image image, int K, int s) {
 		//recuperation de la projection de l'image
 		double[] projImage = this.projection(image, K);
+=======
+
+	// Méthode qui calcule chacune des distances entre l'image test et les images de
+	// référence, elle renvoie la plus petite distance
+	/*
+	 * public double reconnaissance(Image img) { String[] noms = this.getNoms(); //
+	 * Distance minimale double d = Double.MAX_VALUE;
+	 * 
+	 * // Valeur de l'image la plus ressemblante int val = 0;
+	 * 
+	 * // On projette l'image Vecteur Jp = this.projection(img);
+	 * 
+	 * // On parcourt toutes nos images de référence déjà projetées et on calcule la
+	 * // distance for (int i = 0; i < this.vecteursPropres.getColumnDimension();
+	 * i++) { Image ref = new Image("reference/" + i + ".jpg"); Vecteur Ji =
+	 * ref.getPhoto().transfoVect(); double s = 0; for (int j = 0; j <
+	 * Ji.getNbLigne(); j++) { s += Math.pow(Jp.getPixels()[i].getIntensite() -
+	 * Ji.getPixels()[i].getIntensite(), 2); } if (Math.sqrt(s) < d) { d =
+	 * Math.sqrt(s); System.out.println("d = " + d); val = i; }
+	 * 
+	 * }
+	 * 
+	 * // Affichage selon la valeur de d if (d > 0.5) {
+	 * System.out.println("Ce visage n'est pas dans la base de données"); } else {
+	 * // On récupère le nom associé à la bonne image String nom = noms[val];
+	 * String[] nomSansUnderscore = nom.split("_", 2); String[] chaineAvecNom =
+	 * nomSansUnderscore[0].split("/"); String[] chaineAvecPrenom =
+	 * nomSansUnderscore[1].split("/"); String personne =
+	 * chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
+	 * System.out.println("Ce visage correspond à celui de " + personne); }
+	 * 
+	 * return d; }
+	 */
+
+	//methode pour trouver l'image la plus ressemblante a celle passée en parametre
+	public int reconnaissance(Image image) {
+		//recuperation de la projection de l'image
+		double[] projImage = this.projection(image);
+>>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
 		//initialisation des variables
 		double min = -1;
 		double distance;
@@ -541,7 +631,11 @@ public class Matrice {
 		}
 		
 		//rejet de la valeur trouver si la plus petite distance est trop loin
+<<<<<<< HEAD
 		if(min>s)
+=======
+		if(min>5)
+>>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
 			indice=-1;
 		return indice;
 

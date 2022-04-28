@@ -151,15 +151,12 @@ public class Main extends Application {
 		int seuil = 5;
 
 		initialisationBDD();
+
 		Matrice images = initialisationMatriceImages();
 
-		// On teste si le dossier reference existe deja pour ne faire la projection
-		// qu'une seule fois
-		File ref = new File("reference");
-		if (!ref.exists()) {
-			images.projectionReference();
-			System.out.println("Projection de la base de référence réussie");
-		}
+		/*
+		 * images.affichageEigenfaces();
+		 */
 
 		// On teste la reconnaissance avec toutes les images d'une personne de la base
 		// d'apprentissage
@@ -197,15 +194,13 @@ public class Main extends Application {
 			}
 			System.out.println("\n");
 		}
-		
+
 		// On teste la reconnaissance avec toutes les images de la base de test,
 		// personne dans la base et personne pas dans la base,
-		
-		
+
 		// le ratio de bonnes reponses est de 14/17 avec les 6 premieres eigenfaces et
 		// un seuil de 5
-		
-		
+
 		// Les distances sont entre 1 et 5
 		for (int im = 1; im < 18; im++) {
 			Image test = new Image("../BDD/Test/" + im + ".jpg");
@@ -266,8 +261,8 @@ public class Main extends Application {
 		 * i++) { s[i] = "" + d[i]; } for (int i = d.length; i < s.length; i++) { s[i] =
 		 * "" + res[i - d.length]; }
 		 * 
-		 * // On lance la méthode start avec notre paramètre et on affiche les deux
-		 * //graphiques launch(s);
+		 * // On lance la méthode start avec notre paramètre et on affiche les deux //
+		 * graphiques launch(s);
 		 */
 	}
 }
