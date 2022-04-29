@@ -22,6 +22,33 @@ public class Matrice {
 	private Matrix vecteursPropres;
 	private Matrix matriceProjection;
 	private Vecteur moy;
+	private String[] noms;
+	private Matrix matriceVisage;
+	private Pixel[][] matriceCentralisee;
+
+	public Pixel[][] getMatriceCentralisee() {
+		return matriceCentralisee;
+	}
+
+	public void setMatriceCentralisee(Pixel[][] matriceCentralisee) {
+		this.matriceCentralisee = matriceCentralisee;
+	}
+
+	public Matrix getMatriceVisage() {
+		return matriceVisage;
+	}
+
+	public void setMatriceVisage(Matrix matriceVisage) {
+		this.matriceVisage = matriceVisage;
+	}
+
+	public String[] getNoms() {
+		return noms;
+	}
+
+	public void setNoms(String[] noms) {
+		this.noms = noms;
+	}
 
 	public Matrice(int n, int m) {
 		this.n = n;
@@ -91,6 +118,23 @@ public class Matrice {
 
 	public void setMoy(Vecteur moy) {
 		this.moy = moy;
+	}
+
+	// methode d'initialisation de la liste des noms
+	public void noms(String[] noms) {
+		setNoms(noms);
+	}
+
+	// methode d'initialisation de la matrice de visage
+	public void matriceVisage() {
+		// creation d'une nouvelle matrice carre de la taille des colonnes de la matrice
+		Matrix mVis = new Matrix(this.n, this.m);
+		for (int i = 0; i < this.n; i++) {
+			for (int j = 0; j < this.m; j++) {
+				mVis.set(i, j, this.pixels[i][j].getIntensite());
+			}
+		}
+		this.setMatriceVisage(mVis);
 	}
 
 	// methode d'initialisation de la matrice de covariance reduite
@@ -235,6 +279,7 @@ public class Matrice {
 		}
 		// changement de la matrice image par celle centralisée
 		this.setPixels(A);
+		this.setMatriceCentralisee(A);
 	}
 
 	public Vecteur transfoVect() {
@@ -255,12 +300,12 @@ public class Matrice {
 	}
 
 	// Méthode pour afficher une matrice en niveau de gris
-	public void affichage() {
+	public void affichage(String name) {
 		// Déclaration des variables
 		// Création de l'image
 		BufferedImage img = new BufferedImage(this.m, this.n, BufferedImage.TYPE_BYTE_GRAY);
 		// Création du fichier qui va stocker l'image
-		File f = new File("Image.jpg");
+		File f = new File(name);
 		// recherche du minimum
 		double min = 0;
 		for (int i = 0; i < this.n; i++) {
@@ -392,7 +437,6 @@ public class Matrice {
 			}
 			d[K] = Math.sqrt(s);
 		}
-
 		return d;
 
 	}
@@ -424,13 +468,6 @@ public class Matrice {
 
 	// Méthode qui projette une image
 	public double[] projection(Image img, int K) {
-		// On centralise l'image à projeter
-		/*
-		 * for (int i = 0; i < img.getPhoto().getN(); i++) { for (int j = 0; j <
-		 * img.getPhoto().getM(); j++) { img.getPhoto().pixels[i][j].setIntensite(
-		 * img.getPhoto().pixels[i][j].getIntensite() -
-		 * this.moy.getPixels()[i].getIntensite()); } }
-		 */
 		// creation d'un vecteur a partir de l'image
 		Vecteur image = img.getPhoto().transfoVect();
 		// inversion des valeurs et centralisation
@@ -451,57 +488,63 @@ public class Matrice {
 		}
 
 		return projection;
-		/*
-		 * double[] coords = new double[this.vecteursPropres.getColumnDimension()]; for
-		 * (int k = 0; k < coords.length; k++) { coords[k] = 0; for(int i = 0; i <
-		 * this.vecteursPropres.getRowDimension(); i++) {
-		 * coords[k]+=this.vecteursPropres.get(i,
-		 * k)*image.getPixels()[i].getIntensite(); } }
-		 * 
-		 * Vecteur res = new Vecteur(); for (int j = 0; j <
-		 * this.vecteursPropres.getRowDimension(); j++) { // initialisation des pixels
-		 * du vecteur de retour res.getPixels()[j] = new Pixel(0); // calcul de la
-		 * valeur de l'intensite for (int k = 0; k <
-		 * this.vecteursPropres.getColumnDimension(); k++) {
-		 * res.getPixels()[j].setIntensite(res.getPixels()[j].getIntensite()
-		 * +coords[k]*this.vecteursPropres.get(j, k)); } // ajout de la moyenne a
-		 * l'image calculee res.getPixels()[j]
-		 * .setIntensite(res.getPixels()[j].getIntensite() +
-		 * this.getMoy().getPixels()[j].getIntensite()); }
-		 * res.transfoMat().affichage("TestProj.jpg");
-		 * 
-		 * return res;
-		 */
 	}
 
-	// methode pour trouver l'image la plus ressemblante a celle passée en parametre
+	// Méthode qui stocke les projections des images de références
+	public void projectionReference() {
+		// On projette et stocke chaque image de référence
+		int n = (int) Math.sqrt(this.getMatriceVisage().getRowDimension());
+
+		// On crée le dossier reference s'il n'existe pas
+		File ref = new File("reference");
+		ref.mkdirs();
+
+		// On récupère la j ieme image
+		for (int j = 0; j < this.getVecteursPropres().getColumnDimension(); j++) {
+			Matrice imageM = new Matrice(n, n);
+			int z = 0;
+			for (int i = 0; i < n; i++) {
+				for (int k = 0; k < n; k++) {
+					imageM.pixels[i][k] = new Pixel(this.getMatriceVisage().get(z, j));
+					z++;
+				}
+			}
+
+			// On projette la j eme image et on la stocke dans le dossier reference
+			Vecteur proj = this.reconstructionImage(j, this.vecteursPropres.getColumnDimension());
+			Matrice projAffichage = proj.transfoMat();
+			projAffichage.affichage(ref.getPath() + "/" + j + ".jpg");
+
+		}
+	}
+
+	//methode pour trouver l'image la plus ressemblante a celle passée en parametre
 	public int reconnaissance(Image image, int K, int s) {
-		// recuperation de la projection de l'image
-		double[] projImage = this.projection(image, K);
-		// initialisation des variables
+		//recuperation de la projection de l'image
+		double[] projImage = this.projection(image,K);
+		//initialisation des variables
 		double min = -1;
 		double distance;
 		int indice = -1;
-
-		// calcul de la distance entre la projection de l'image et celles des images de
-		// la bdd
+		
+		//calcul de la distance entre la projection de l'image et celles des images de la bdd
 		for (int j = 0; j < this.matriceProjection.getRowDimension(); j++) {
-			distance = 0;
+			distance=0;
 			for (int i = 0; i < projImage.length; i++) {
-				distance += Math.pow(this.matriceProjection.get(j, i) - projImage[i], 2);
+				distance+=Math.pow(this.matriceProjection.get(j, i)-projImage[i], 2);
 			}
-			distance = Math.sqrt(distance);
-			// recherche de la plus petite distance
-			if (min == -1 || distance < min) {
-				min = distance;
-				indice = j;
+			distance=Math.sqrt(distance);
+			//recherche de la plus petite distance
+			if(min==-1||distance<min) {
+				min=distance;
+				indice=j;
 			}
 		}
+		
+		//rejet de la valeur trouver si la plus petite distance est trop loin
+		if(min>s)
 
-		// rejet de la valeur trouver si la plus petite distance est trop loin
-		if (min > s)
-			indice = -1;
-
+			indice=-1;
 		return indice;
 
 	}
