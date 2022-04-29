@@ -76,16 +76,4 @@ public class Personne{
 		}
 	}
 	
-	//Test
-	/*
-	public static void main(String[] args) {
-		Image image = new Image("../BDD/Train/AUZOLLES_Melina/AUZOLLES_Melina_1.jpg");
-		Set<Image> set = new HashSet<Image>();
-		set.add(image);
-		Personne moi = new Personne("AUZOLLES", "Melina");
-		
-		System.out.println(Personne.ChambasM.images);
-	}
-	*/
-	
 }

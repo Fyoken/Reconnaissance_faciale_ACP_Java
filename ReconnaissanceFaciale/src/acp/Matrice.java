@@ -358,10 +358,10 @@ public class Matrice {
 
 	public void affichageEigenfaces() {
 		// creation d'une grande image
-		BufferedImage eigenfaces = new BufferedImage(450, 350, BufferedImage.TYPE_BYTE_GRAY);
+		BufferedImage eigenfaces = new BufferedImage(220, 150, BufferedImage.TYPE_INT_RGB);
 		Graphics2D fond = eigenfaces.createGraphics();
 		fond.setColor(Color.white);
-		fond.fillRect(0, 0, 450, 350);
+		fond.fillRect(0, 0, 220, 150);
 
 		// Création du fichier qui va stocker l'image
 		File f = new File("eigenfaces.jpg");
@@ -451,7 +451,6 @@ public class Matrice {
 		double res = 0;
 
 		double[] affichage = new double[vp.length];
-		// J première(s) eigenface(s)
 
 		// On calcule s
 		for (int i = 0; i < vp.length; i++) {

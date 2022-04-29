@@ -107,5 +107,4 @@ public class Image {
 		return(this.getNomImage());
 	}
 	
-	
 }
