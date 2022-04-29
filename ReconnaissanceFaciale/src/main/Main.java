@@ -25,8 +25,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import javafx.stage.FileChooser.ExtensionFilter;
 import personne.Personne;
 import vectorisation.Vecteur;
 
@@ -70,6 +71,12 @@ public class Main extends Application {
 	public void start(Stage stage) {
 		stage.setTitle("Logiciel de reconnaissance faciale | Groupe 5");
 
+		initialisationBDD();
+		final Matrice images = initialisationMatriceImages();
+		final int K=6;
+		final int seuil=5;
+
+		
 		File fichier = new File("image_base.png");
 		Image image = new Image(fichier.toURI().toString());
 		ImageView imageView = new ImageView(image);
@@ -96,7 +103,7 @@ public class Main extends Application {
 		boutons.getChildren().addAll(imageReconstruite, eigenfaces, grapheErreurs, testerUneImage);
 
 		VBox informations = new VBox();
-		informations.getChildren().addAll(imageView, texte);
+		informations.getChildren().addAll(texte,imageView);
 
 		HBox general = new HBox();
 		general.getChildren().addAll(informations, boutons);
@@ -196,8 +203,11 @@ public class Main extends Application {
 		imageReconstruite.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				informations.getChildren().remove(0);
-				informations.getChildren().remove(0);
+				informations.getChildren().remove(1);
+
+				Vecteur test = images.reconstructionImage(0, images.getVecteursPropres().getColumnDimension());
+				test.transfoMat().affichage();
+				
 				Image image = new Image(new File("Image.jpg").toURI().toString());
 				imageView.setImage(image);
 				HBox images = new HBox();
@@ -212,8 +222,10 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				informations.getChildren().remove(0);
-				informations.getChildren().remove(0);
+				informations.getChildren().remove(1);
+				
+				images.affichageEigenfaces();
+
 				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
 				imageView.setImage(image);
 				texte.setText("Les 6 premiers eigenfaces");
@@ -234,6 +246,44 @@ public class Main extends Application {
 			}
 		});
 
+		testerUneImage.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				//on retire l'affichage precedent
+				informations.getChildren().remove(1);
+				
+				//on ouvre une fenetre pour selectionner un fichier
+				FileChooser choix = new FileChooser();
+				choix.getExtensionFilters().add(new ExtensionFilter("Image Files","*.jpg","*.png","*.jpeg"));
+				
+				//on recupere le fichier choisi
+				File imageChoisi = choix.showOpenDialog(stage);
+				
+				//on ajoute l'image choisi dans l'affichage
+				imageView.setImage(new Image(imageChoisi.toURI().toString()));
+				
+				//on cree une nouvelle image a partir du fichier choisi
+				personne.Image imageC = new personne.Image(imageChoisi.toPath().toString());
+				
+				int i =images.reconnaissance(imageC, K, seuil);
+				Label resultat = new Label("C'est l'image : "+String.valueOf(i));
+				if(i==-1) {
+					resultat.setText("Personne n'a été trouvé");
+				}
+				
+				texte.setText("Teste de reconnaissance facial");
+				HBox resultats = new HBox();
+				resultats.getChildren().addAll(imageView,resultat);
+				
+				informations.getChildren().add(resultats);
+				
+				
+
+				
+			}
+		});
+		
 		/*
 		 * La scène principale, la première sur laquelle on est et celle sur laquelle on
 		 * peut revenir
@@ -248,11 +298,9 @@ public class Main extends Application {
 		initialisationBDD();
 		Matrice images = initialisationMatriceImages();
 
-		images.affichageEigenfaces();
 
 		// Test pour reconstruire la première image
-		Vecteur test = images.reconstructionImage(0, images.getVecteursPropres().getColumnDimension());
-		test.transfoMat().affichage();
+	
 		System.out.println("Done");
 		double[] vp = images.valeursPropres();
 
