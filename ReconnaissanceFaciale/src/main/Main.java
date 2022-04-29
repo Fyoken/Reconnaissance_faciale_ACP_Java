@@ -1,6 +1,7 @@
 package main;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,11 +54,17 @@ public class Main extends Application {
 
 	public static Matrice initialisationMatriceImages() {
 		Matrice images = new Matrice(50 * 50, bdd.size() * Personne.AuzollesM.getImages().size());
-		for (Personne personneBDD : bdd) {
-			for (personne.Image image : personneBDD.getImages()) {
+		String[] noms = new String[bdd.size() * Personne.AuzollesM.getImages().size()];
+		int i = 0;
+		for (Personne personne : bdd) {
+			for (Image image : personne.getImages()) {
 				images.ajouterImage(image.getPhoto().transfoVect());
+				noms[i] = image.getNomImage();
+				i++;
 			}
 		}
+		images.matriceVisage();
+		images.noms(noms);
 		images.moyenne();
 		images.centralisation();
 		images.matriceCovariance();
@@ -314,23 +321,117 @@ public class Main extends Application {
 		// l'erreur
 		// Image image = new Image("../BDD/Test/3.jpg");
 
-		// On récupère les valeurs des erreurs en fonction de K
+		Matrice images = initialisationMatriceImages();
 
-		// On compare image à la première image de la base
-		double[] d = images.affichageGraphique(image, 0);
-		// On ajoute toutes les valeurs de distances puis la variance cumulée en
-		// fonction de K dans une chaîne
-		String[] s = new String[d.length + res.length];
-		for (int i = 0; i < d.length; i++) {
-			s[i] = "" + d[i];
+		/*
+		 * images.affichageEigenfaces();
+		 */
+
+		// On teste la reconnaissance avec toutes les images d'une personne de la base
+		// d'apprentissage
+		// Les distances sont presques nulles
+		for (int im = 1; im < 4; im++) {
+			Image test = new Image("../BDD/Train/AUZOLLES_Melina/AUZOLLES_Melina_" + im + ".jpg");
+			int i = images.reconnaissance(test, KPremieresEigenfaces, seuil);
+			System.out.println("Apprentissage " + im);
+
+			// Si i est different de -1, c'est qu'une correspondance a ete trouvee
+			if (i != -1) {
+				// On recupere le nom et le prenom via le nom image de la forme
+				// ../BDD/NOM_Prenom∕NOM_Prenom_i.jpg
+				String nom = images.getNoms()[i];
+
+				// On separe le nom de l'image selon '_' puis selon '/' pour recuperer que le
+				// nom et le prenom
+				String[] nomSansUnderscore = nom.split("_", 2);
+				String[] chaineAvecNom = nomSansUnderscore[0].split("/");
+				String[] chaineAvecPrenom = nomSansUnderscore[1].split("/");
+				String personne = chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
+
+				// Affichage du nom et de la distance recalculee
+				System.out.println("Ce visage correspond à celui de " + personne);
+				double[] projection = images.projection(test, KPremieresEigenfaces);
+				double distance = 0;
+				for (int j = 0; j < projection.length; j++) {
+					distance += Math.pow(images.getMatriceProjection().get(i, j) - projection[j], 2);
+				}
+				distance = Math.sqrt(distance);
+				System.out.println("La distance est de : " + distance);
+			} else {
+				// Le seuil n'est pas respecte
+				System.out.println("Ce visage n'appartient pas à la base");
+			}
+			System.out.println("\n");
 		}
-		for (int i = d.length; i < s.length; i++) {
-			s[i] = "" + res[i - d.length];
+
+		// On teste la reconnaissance avec toutes les images de la base de test,
+		// personne dans la base et personne pas dans la base,
+
+		// le ratio de bonnes reponses est de 14/17 avec les 6 premieres eigenfaces et
+		// un seuil de 5
+
+		// Les distances sont entre 1 et 5
+		for (int im = 1; im < 18; im++) {
+			Image test = new Image("../BDD/Test/" + im + ".jpg");
+			int i = images.reconnaissance(test, KPremieresEigenfaces, seuil);
+			System.out.println("Test " + im);
+
+			// Si i est different de -1, c'est qu'une correspondance a ete trouvee
+			if (i != -1) {
+				// On recupere le nom et le prenom via le nom image de la forme
+				// ../BDD/NOM_Prenom∕NOM_Prenom_i.jpg
+				String nom = images.getNoms()[i];
+
+				// On separe le nom de l'image selon '_' puis selon '/' pour recuperer que le
+				// nom et le prenom
+				String[] nomSansUnderscore = nom.split("_", 2);
+				String[] chaineAvecNom = nomSansUnderscore[0].split("/");
+				String[] chaineAvecPrenom = nomSansUnderscore[1].split("/");
+				String personne = chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
+
+				// Affichage du nom et de la distance recalculee
+				System.out.println("Ce visage correspond à celui de " + personne);
+				double[] projection = images.projection(test, KPremieresEigenfaces);
+				double distance = 0;
+				for (int j = 0; j < projection.length; j++) {
+					distance += Math.pow(images.getMatriceProjection().get(i, j) - projection[j], 2);
+				}
+				distance = Math.sqrt(distance);
+				System.out.println("La distance est de : " + distance);
+			} else {
+				// Le seuil n'est pas respecte
+				System.out.println("Ce visage n'appartient pas à la base");
+			}
+			System.out.println("\n");
 		}
 
-		// On lance la méthode start avec notre paramètre et on affiche les deux
-		// graphiques
-		launch(s);
+		/*
+		 * images.affichageEigenfaces();
+		 */
 
+		/*
+		 * double[] vp = images.valeursPropres();
+		 * 
+		 * // Méthode qui donne la variance cumulée en fonction de K double[] res =
+		 * images.normaliserEtAfficherVariation(vp);
+		 * 
+		 * // Première image de la base de référence pour le calcul de l'erreur Image
+		 * image = new Image("../BDD/Train/LASGLEIZES_David/LASGLEIZES_David_3.jpg");
+		 * 
+		 * // Image de la bonne personne mais avec une image de test pour le calcul de
+		 * // l'erreur // Image image = new Image("../BDD/Test/3.jpg");
+		 * 
+		 * // On récupère les valeurs des erreurs en fonction de K
+		 * 
+		 * // On compare image à la première image de la base double[] d =
+		 * images.affichageGraphique(image, 0); // On ajoute toutes les valeurs de
+		 * distances puis la variance cumulée en // fonction de K dans une chaîne
+		 * String[] s = new String[d.length + res.length]; for (int i = 0; i < d.length;
+		 * i++) { s[i] = "" + d[i]; } for (int i = d.length; i < s.length; i++) { s[i] =
+		 * "" + res[i - d.length]; }
+		 * 
+		 * // On lance la méthode start avec notre paramètre et on affiche les deux //
+		 * graphiques launch(s);
+		 */
 	}
 }
