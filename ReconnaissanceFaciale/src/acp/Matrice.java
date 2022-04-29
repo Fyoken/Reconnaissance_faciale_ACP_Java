@@ -473,8 +473,7 @@ public class Matrice {
 		// inversion des valeurs et centralisation
 		for (int i = 0; i < image.getNbLigne(); i++) {
 			image.getPixels()[i].setIntensite(1 - image.getPixels()[i].getIntensite());
-			image.getPixels()[i]
-					.setIntensite(image.getPixels()[i].getIntensite() - this.moy.getPixels()[i].getIntensite());
+			image.getPixels()[i].setIntensite(image.getPixels()[i].getIntensite() - this.moy.getPixels()[i].getIntensite());
 		}
 
 		double[] projection = new double[K];
@@ -540,7 +539,7 @@ public class Matrice {
 				indice=j;
 			}
 		}
-		
+		System.out.println(min);
 		//rejet de la valeur trouver si la plus petite distance est trop loin
 		if(min>s)
 
