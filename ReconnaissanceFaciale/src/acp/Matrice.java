@@ -422,4 +422,88 @@ public class Matrice {
 		return affichage;
 	}
 
+	// Méthode qui projette une image
+	public double[] projection(Image img, int K) {
+		// On centralise l'image à projeter
+		/*
+		 * for (int i = 0; i < img.getPhoto().getN(); i++) { for (int j = 0; j <
+		 * img.getPhoto().getM(); j++) { img.getPhoto().pixels[i][j].setIntensite(
+		 * img.getPhoto().pixels[i][j].getIntensite() -
+		 * this.moy.getPixels()[i].getIntensite()); } }
+		 */
+		// creation d'un vecteur a partir de l'image
+		Vecteur image = img.getPhoto().transfoVect();
+		// inversion des valeurs et centralisation
+		for (int i = 0; i < image.getNbLigne(); i++) {
+			image.getPixels()[i].setIntensite(1 - image.getPixels()[i].getIntensite());
+			image.getPixels()[i]
+					.setIntensite(image.getPixels()[i].getIntensite() - this.moy.getPixels()[i].getIntensite());
+		}
+
+		double[] projection = new double[K];
+		// calcul de la projection de l'image dans la base des vecteurs propres
+		for (int k = 0; k < projection.length; k++) {
+			projection[k] = 0;
+
+			for (int i = 0; i < image.getNbLigne(); i++) {
+				projection[k] += image.getPixels()[i].getIntensite() * this.vecteursPropres.get(i, k);
+			}
+		}
+
+		return projection;
+		/*
+		 * double[] coords = new double[this.vecteursPropres.getColumnDimension()]; for
+		 * (int k = 0; k < coords.length; k++) { coords[k] = 0; for(int i = 0; i <
+		 * this.vecteursPropres.getRowDimension(); i++) {
+		 * coords[k]+=this.vecteursPropres.get(i,
+		 * k)*image.getPixels()[i].getIntensite(); } }
+		 * 
+		 * Vecteur res = new Vecteur(); for (int j = 0; j <
+		 * this.vecteursPropres.getRowDimension(); j++) { // initialisation des pixels
+		 * du vecteur de retour res.getPixels()[j] = new Pixel(0); // calcul de la
+		 * valeur de l'intensite for (int k = 0; k <
+		 * this.vecteursPropres.getColumnDimension(); k++) {
+		 * res.getPixels()[j].setIntensite(res.getPixels()[j].getIntensite()
+		 * +coords[k]*this.vecteursPropres.get(j, k)); } // ajout de la moyenne a
+		 * l'image calculee res.getPixels()[j]
+		 * .setIntensite(res.getPixels()[j].getIntensite() +
+		 * this.getMoy().getPixels()[j].getIntensite()); }
+		 * res.transfoMat().affichage("TestProj.jpg");
+		 * 
+		 * return res;
+		 */
+	}
+
+	// methode pour trouver l'image la plus ressemblante a celle passée en parametre
+	public int reconnaissance(Image image, int K, int s) {
+		// recuperation de la projection de l'image
+		double[] projImage = this.projection(image, K);
+		// initialisation des variables
+		double min = -1;
+		double distance;
+		int indice = -1;
+
+		// calcul de la distance entre la projection de l'image et celles des images de
+		// la bdd
+		for (int j = 0; j < this.matriceProjection.getRowDimension(); j++) {
+			distance = 0;
+			for (int i = 0; i < projImage.length; i++) {
+				distance += Math.pow(this.matriceProjection.get(j, i) - projImage[i], 2);
+			}
+			distance = Math.sqrt(distance);
+			// recherche de la plus petite distance
+			if (min == -1 || distance < min) {
+				min = distance;
+				indice = j;
+			}
+		}
+
+		// rejet de la valeur trouver si la plus petite distance est trop loin
+		if (min > s)
+			indice = -1;
+
+		return indice;
+
+	}
+
 }
