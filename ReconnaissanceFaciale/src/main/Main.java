@@ -78,22 +78,20 @@ public class Main extends Application {
 	public void start(Stage stage) {
 		stage.setTitle("Logiciel de reconnaissance faciale | Groupe 5");
 
-		initialisationBDD();
 		final Matrice images = initialisationMatriceImages();
+		
 		final int reconstruit = 0;
-		final int K = 10;
-		final int seuil = 6;
+		final int K = 15;
+		final int seuil = 5;
 
 		Vecteur moy = images.getMoy();
 		moy.transfoMat().affichage("moyenne.jpg");
-		
-		Vecteur vecteurImage = images.reconstructionImage(reconstruit, images.getVecteursPropres().getColumnDimension());
+
+		Vecteur vecteurImage = images.reconstructionImage(reconstruit,K);
 		vecteurImage.transfoMat().affichage("Image.jpg");
 
-		
 		images.affichageEigenfaces();
 
-		
 		File fichier = new File("image_base.png");
 		Image image = new Image(fichier.toURI().toString());
 		ImageView imageView = new ImageView(image);
@@ -104,7 +102,7 @@ public class Main extends Application {
 
 		Button imageReconstruite = new Button("Afficher l'image reconstruite");
 		Button eigenfaces = new Button("Afficher les 6 premières eigenfaces");
-		Button moyenne =  new Button("Afficher le visage moyenne");
+		Button moyenne = new Button("Afficher le visage moyenne");
 		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
 		Button testerUneImage = new Button("Choisir une image à tester");
 
@@ -117,7 +115,7 @@ public class Main extends Application {
 		image_r.setPreserveRatio(true);
 
 		VBox boutons = new VBox();
-		boutons.getChildren().addAll(imageReconstruite, moyenne,eigenfaces, grapheErreurs, testerUneImage);
+		boutons.getChildren().addAll(imageReconstruite, moyenne, eigenfaces, grapheErreurs, testerUneImage);
 
 		VBox informations = new VBox();
 		informations.getChildren().addAll(texte, imageView);
@@ -222,7 +220,6 @@ public class Main extends Application {
 			public void handle(ActionEvent event) {
 				informations.getChildren().remove(1);
 
-				
 				Image image = new Image(new File("Image.jpg").toURI().toString());
 				imageView.setImage(image);
 				HBox images = new HBox();
@@ -236,14 +233,13 @@ public class Main extends Application {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// TODO Auto-generated method stub
 				informations.getChildren().remove(1);
 
 				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
 				imageView.setImage(image);
-				
+
 				texte.setText("Les 6 premiers eigenfaces");
-				
+
 				informations.getChildren().add(imageView);
 
 			}
@@ -277,12 +273,15 @@ public class Main extends Application {
 				imageView.setImage(new Image(imageChoisi.toURI().toString()));
 
 				// on cree une nouvelle image a partir du fichier choisi
-				personne.Image imageC = new personne.Image(imageChoisi.toPath().toString());
+				personne.Image imageC = new personne.Image(imageChoisi.getPath());
 
+			
 				int i = images.reconnaissance(imageC, K, seuil);
+
 				
 				texte.setText("Teste de reconnaissance facial");
 				VBox resultats = new VBox();
+
 				
 				if (i == -1) {
 					Label resultat = new Label("Personne n'a été trouvé");
@@ -301,34 +300,31 @@ public class Main extends Application {
 					String[] chaineAvecPrenom = nomSansUnderscore[1].split("/");
 					String personne = chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
 
-					Label resultat = new Label(personne+" est reconnu depuis l'image de gauche.");
+					Label resultat = new Label(personne + " est reconnu depuis l'image de gauche.");
 					HBox imagesAffichees = new HBox();
-					imagesAffichees.getChildren().addAll(imageView,viewTrouve);
-					resultats.getChildren().addAll(imagesAffichees,resultat);
-					
-				}
+					imagesAffichees.getChildren().addAll(imageView, viewTrouve);
+					resultats.getChildren().addAll(imagesAffichees, resultat);
 
+				}
 
 				informations.getChildren().add(resultats);
 
 			}
 		});
-		
+
 		moyenne.setOnAction(new EventHandler<ActionEvent>() {
-			
+
 			@Override
 			public void handle(ActionEvent event) {
 				informations.getChildren().remove(1);
-				
-				
 
 				Image image = new Image(new File("moyenne.jpg").toURI().toString());
 				imageView.setImage(image);
-				
+
 				texte.setText("Visage moyenne de la base de donnée ");
-				
+
 				informations.getChildren().add(imageView);
-			
+
 			}
 		});
 
@@ -346,12 +342,9 @@ public class Main extends Application {
 		initialisationBDD();
 		Matrice images = initialisationMatriceImages();
 
-		int K = 6;
+		int K = 15;
 		int seuil = 5;
-
-		// Test pour reconstruire la première image
-
-		System.out.println("Done");
+		
 		double[] vp = images.valeursPropres();
 
 		// Méthode qui donne la variance cumulée en fonction de K
@@ -400,7 +393,7 @@ public class Main extends Application {
 		// On teste la reconnaissance avec toutes les images de la base de test,
 		// personne dans la base et personne pas dans la base,
 
-		// le ratio de bonnes reponses est de 14/17 avec les 6 premieres eigenfaces et
+		// le ratio de bonnes reponses est de 14/17 avec les 15 premieres eigenfaces et
 		// un seuil de 5
 
 		// Les distances sont entre 1 et 5
@@ -442,10 +435,9 @@ public class Main extends Application {
 
 		// Image de la bonne personne mais avec une image de test pour le calcul de
 		// l'erreur
-		// Image image = new Image("../BDD/Test/3.jpg");
 		// On récupère les valeurs des erreurs en fonction de K
 
-		// On compare image à la première image de la base 
+		// On compare image à la première image de la base
 		double[] d = images.affichageGraphique(image, 0);
 		// On ajoute toutes les valeurs dedistances puis la variance cumulée en fonction
 		// de K dans une chaîne
@@ -459,7 +451,8 @@ public class Main extends Application {
 
 		// On lance la méthode start avec notre paramètre et on affiche les deux
 		// graphiques
+
 		
-		launch();
+		launch(s);
 	}
 }

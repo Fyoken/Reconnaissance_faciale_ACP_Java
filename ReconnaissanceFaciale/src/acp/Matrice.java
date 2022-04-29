@@ -232,12 +232,10 @@ public class Matrice {
 			imageI.getPixels()[j] = new Pixel(0);
 			// calcul de la valeur de l'intensite
 			for (int k = 0; k < K; k++) {
-				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()
-						+ this.vecteursPropres.get(j, k) * this.matriceProjection.get(i, k));
+				imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite()+ this.vecteursPropres.get(j, k) * this.matriceProjection.get(i, k));
 			}
 			// ajout de la moyenne a l'image calculer
-			imageI.getPixels()[j]
-					.setIntensite(imageI.getPixels()[j].getIntensite() + this.moyenne().getPixels()[j].getIntensite());
+			imageI.getPixels()[j].setIntensite(imageI.getPixels()[j].getIntensite() + this.moy.getPixels()[j].getIntensite());
 
 		}
 
@@ -472,7 +470,9 @@ public class Matrice {
 		Vecteur image = img.getPhoto().transfoVect();
 		// inversion des valeurs et centralisation
 		for (int i = 0; i < image.getNbLigne(); i++) {
+			
 			image.getPixels()[i].setIntensite(1 - image.getPixels()[i].getIntensite());
+			
 			image.getPixels()[i].setIntensite(image.getPixels()[i].getIntensite() - this.moy.getPixels()[i].getIntensite());
 		}
 
@@ -539,7 +539,6 @@ public class Matrice {
 				indice=j;
 			}
 		}
-		System.out.println(min);
 		//rejet de la valeur trouver si la plus petite distance est trop loin
 		if(min>s)
 
