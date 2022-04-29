@@ -468,25 +468,21 @@ public class Matrice {
 	}
 
 	// Méthode qui projette une image
-<<<<<<< HEAD
 	public double[] projection(Image img, int K) {
-=======
-	public double[] projection(Image img) {
 		// On centralise l'image à projeter
-		/*for (int i = 0; i < img.getPhoto().getN(); i++) {
-			for (int j = 0; j < img.getPhoto().getM(); j++) {
-				img.getPhoto().pixels[i][j].setIntensite(
-						img.getPhoto().pixels[i][j].getIntensite() - this.moy.getPixels()[i].getIntensite());
-			}
-		}*/
->>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
-		//creation d'un vecteur a partir de l'image
+		/*
+		 * for (int i = 0; i < img.getPhoto().getN(); i++) { for (int j = 0; j <
+		 * img.getPhoto().getM(); j++) { img.getPhoto().pixels[i][j].setIntensite(
+		 * img.getPhoto().pixels[i][j].getIntensite() -
+		 * this.moy.getPixels()[i].getIntensite()); } }
+		 */
+		// creation d'un vecteur a partir de l'image
 		Vecteur image = img.getPhoto().transfoVect();
-		//inversion des valeurs et centralisation
-		for(int i=0;i<image.getNbLigne();i++) {
-			image.getPixels()[i].setIntensite(1-image.getPixels()[i].getIntensite());
-			image.getPixels()[i].setIntensite(image.getPixels()[i].getIntensite()- this.moy.getPixels()[i].getIntensite());
-<<<<<<< HEAD
+		// inversion des valeurs et centralisation
+		for (int i = 0; i < image.getNbLigne(); i++) {
+			image.getPixels()[i].setIntensite(1 - image.getPixels()[i].getIntensite());
+			image.getPixels()[i]
+					.setIntensite(image.getPixels()[i].getIntensite() - this.moy.getPixels()[i].getIntensite());
 		}
 
 		double[] projection = new double[K];
@@ -497,22 +493,6 @@ public class Matrice {
 			for (int i = 0; i < image.getNbLigne(); i++) {
 				projection[k] += image.getPixels()[i].getIntensite() * this.vecteursPropres.get(i, k);
 			}
-=======
->>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
-		}
-
-<<<<<<< HEAD
-		return projection;
-=======
-		double[] projection = new double[6];
-		// calcul de la projection de l'image dans la base des vecteurs propres
-		for (int k = 0; k < projection.length; k++) {
-			projection[k] = 0;
-
-			for (int i = 0; i < image.getNbLigne(); i++) {
-				projection[k] += image.getPixels()[i].getIntensite() * this.vecteursPropres.get(i, k);
-			}
-
 		}
 
 		return projection;
@@ -537,7 +517,6 @@ public class Matrice {
 		 * 
 		 * return res;
 		 */
->>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
 	}
 
 	// Méthode qui stocke les projections des images de références
@@ -567,12 +546,6 @@ public class Matrice {
 
 		}
 	}
-<<<<<<< HEAD
-	//methode pour trouver l'image la plus ressemblante a celle passée en parametre
-	public int reconnaissance(Image image, int K, int s) {
-		//recuperation de la projection de l'image
-		double[] projImage = this.projection(image, K);
-=======
 
 	// Méthode qui calcule chacune des distances entre l'image test et les images de
 	// référence, elle renvoie la plus petite distance
@@ -607,10 +580,9 @@ public class Matrice {
 	 */
 
 	//methode pour trouver l'image la plus ressemblante a celle passée en parametre
-	public int reconnaissance(Image image) {
+	public int reconnaissance(Image image, int K, int s) {
 		//recuperation de la projection de l'image
-		double[] projImage = this.projection(image);
->>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
+		double[] projImage = this.projection(image,K);
 		//initialisation des variables
 		double min = -1;
 		double distance;
@@ -631,15 +603,11 @@ public class Matrice {
 		}
 		
 		//rejet de la valeur trouver si la plus petite distance est trop loin
-<<<<<<< HEAD
 		if(min>s)
-=======
-		if(min>5)
->>>>>>> branch 'phase4' of git@gitlab.etude.eisti.fr:chambasmat/projet-s2.git
+
 			indice=-1;
 		return indice;
 
 	}
 
 }
-
