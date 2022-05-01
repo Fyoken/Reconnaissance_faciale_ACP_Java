@@ -71,7 +71,7 @@ public class Personne{
 		//Pour toutes les images de la base d'entrainement
 		for(int i = 1; i <4; i++) {
 			//On crée une nouvelle image que l'on va ensuite ajouter au set de la personne concernée
-			Image image = new Image("../BDD/Train/" + nomImage + "/" + nomImage + "_" +i+".jpg");
+			Image image = new Image("BDD/Train/" + nomImage + "/" + nomImage + "_" +i+".jpg");
 			this.images.add(image);
 		}
 	}
