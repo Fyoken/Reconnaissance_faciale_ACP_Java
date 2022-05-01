@@ -81,8 +81,8 @@ public class Main extends Application {
 		final Matrice images = initialisationMatriceImages();
 		
 		final int reconstruit = 0;
-		final int K = 15;
-		final int seuil = 5;
+		final int K = 20;
+		final int seuil= 8;
 
 		Vecteur moy = images.getMoy();
 		moy.transfoMat().affichage("moyenne.jpg");
@@ -342,8 +342,8 @@ public class Main extends Application {
 		initialisationBDD();
 		Matrice images = initialisationMatriceImages();
 
-		int K = 15;
-		int seuil = 5;
+		int K = 20;
+		int seuil = 8;
 		
 		double[] vp = images.valeursPropres();
 
