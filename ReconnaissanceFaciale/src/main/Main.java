@@ -137,8 +137,8 @@ public class Main extends Application {
 		Label texte = new Label("Projet sur la reconnaissance faciale");
 
 		Button imageReconstruite = new Button("Afficher l'image reconstruite");
-		Button eigenfaces = new Button("Afficher les 6 premières eigenfaces");
-		Button moyenne = new Button("Afficher le visage moyenne");
+		Button eigenfaces = new Button("Afficher les 6 premiers eigenfaces");
+		Button moyenne = new Button("Afficher le visage moyen");
 		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
 		Button testerUneImage = new Button("Choisir une image à tester");
 
@@ -267,7 +267,7 @@ public class Main extends Application {
 				images.getChildren().addAll(imageView, image_r);
 
 				// modification du texte
-				texte.setText("Visage de la base de donnée reconstruit");
+				texte.setText("Visage de la base de données reconstruit");
 
 				// ajout des images dans l'affichage
 				informations.getChildren().add(images);
@@ -333,7 +333,7 @@ public class Main extends Application {
 				int i = images.reconnaissance(imageC, K, seuil);
 
 				// modification du texte a afficher
-				texte.setText("Teste de reconnaissance facial");
+				texte.setText("Test de reconnaissance faciale");
 
 				// creation d'une nouvelle vbox pour afficher les resultats
 				VBox resultats = new VBox();
@@ -391,7 +391,7 @@ public class Main extends Application {
 				imageView.setImage(image);
 
 				// modification du texte
-				texte.setText("Visage moyenne de la base de donnée ");
+				texte.setText("Visage moyen de la base de donnée ");
 
 				// ajout dans l'affichage
 				informations.getChildren().add(imageView);
