@@ -140,6 +140,7 @@ public class Main extends Application {
 		Button eigenfaces = new Button("Afficher les 6 premiers eigenfaces");
 		Button moyenne = new Button("Afficher le visage moyen");
 		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
+		Button valeurPropre = new Button("Afficher l'évolution des valeurs propres ");
 		Button testerUneImage = new Button("Choisir une image à tester");
 
 		// image de reference de l'image reconstruite
@@ -153,7 +154,7 @@ public class Main extends Application {
 
 		// vbox contenant tous les boutons
 		VBox boutons = new VBox();
-		boutons.getChildren().addAll(imageReconstruite, moyenne, eigenfaces, grapheErreurs, testerUneImage);
+		boutons.getChildren().addAll(imageReconstruite, moyenne, eigenfaces, grapheErreurs,valeurPropre, testerUneImage);
 
 		// vbox pour afficher les informations en fonction du boutons clique
 		VBox informations = new VBox();
@@ -218,27 +219,49 @@ public class Main extends Application {
 		// Création de la courbe pour les variances cumulées
 		final NumberAxis xAxis2 = new NumberAxis(1, varianceCumule.length, 1);
 		final NumberAxis yAxis2 = new NumberAxis();
-
+		
 		// Déclaration d'une courbe
 		final AreaChart<Number, Number> areaChart = new AreaChart<Number, Number>(xAxis2, yAxis2);
 		areaChart.setTitle("Variance cumulée des K premières valeurs propres");
 		areaChart.setLegendSide(Side.LEFT);
-
+		
 		// Valeurs des x et y
 		XYChart.Series<Number, Number> seriesVar = new XYChart.Series<Number, Number>();
-
+		
 		seriesVar.setName("Pourcentage de variance cumulée");
-
+		
 		// On ajoute toutes les valeurs
 		for (int i = 0; i < varianceCumule.length; i++) {
 			seriesVar.getData().add(new XYChart.Data<Number, Number>(i + 1, varianceCumule[i]));
 		}
+		// Création de la courbe pour les valeurs propres
+		final NumberAxis xAxis3 = new NumberAxis(1, varianceCumule.length, 1);
+		final NumberAxis yAxis3 = new NumberAxis();
 
-		/* Pour la courbe */
+		// Déclaration d'une courbe
+		final AreaChart<Number, Number> valeurPropreGraphe = new AreaChart<Number, Number>(xAxis3, yAxis3);
+		valeurPropreGraphe.setTitle("Valeurs propres par ordre décroissant");
+
+		// Valeurs des x et y
+		XYChart.Series<Number, Number> valeurs = new XYChart.Series<Number, Number>();
+		valeurs.setName("Valeurs propres");
+		
+		// On ajoute toutes les valeurs
+		for (int i = 0; i < vp.length; i++) {
+			valeurs.getData().add(new XYChart.Data<Number, Number>(i + 1, vp[i]));
+		}
+
+		/* Pour la courbe des variances cumulées*/
 		BorderPane courbe = new BorderPane();
 		courbe.setCenter(areaChart);
 		areaChart.getData().addAll(seriesVar);
 		courbe.setPrefSize(400, 300);
+		
+		/* Pour la courbe des variances cumulées*/
+		BorderPane courbeVP = new BorderPane();
+		courbeVP.setCenter(valeurPropreGraphe);
+		valeurPropreGraphe.getData().addAll(valeurs);
+		courbeVP.setPrefSize(400, 300);
 
 		/* Pour l'histogramme */
 		StackPane histo = new StackPane();
@@ -247,7 +270,7 @@ public class Main extends Application {
 
 		/* HBox avec les 2 graphes qu'on ajoute */
 		HBox graphes = new HBox();
-		graphes.getChildren().addAll(courbe, histo);
+		graphes.getChildren().addAll(courbe,courbeVP);
 
 		/* Pour changer de scene et aller sur celle de l'image reconstruite */
 
@@ -296,15 +319,27 @@ public class Main extends Application {
 			}
 		});
 
-		/* Pour changer de scene et aller sur celle des graphes d'erreur */
-
-		grapheErreurs.setOnAction(new EventHandler<ActionEvent>() {
+		
+		//evenement pour afficher les graphiques liés aux valeurs propres	
+		valeurPropre.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				// suppression de l'affichage precedent
 				informations.getChildren().remove(1);
 				// ajout des graphes dans l'affichage
 				informations.getChildren().add(graphes);
+			}
+		});
+		
+		//evenement pour afficher le graphique de l'évolution de l'erreur	
+		grapheErreurs.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				// suppression de l'affichage precedent
+				informations.getChildren().remove(1);
+				// ajout du graphes dans l'affichage
+				informations.getChildren().add(histo);
+
 			}
 		});
 
