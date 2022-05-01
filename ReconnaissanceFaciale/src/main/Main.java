@@ -1,7 +1,6 @@
 package main;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,14 +26,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import personne.Personne;
 import vectorisation.Vecteur;
 
 public class Main extends Application {
 	public static Set<Personne> bdd = new HashSet<Personne>();
 
+	// methode permetant d'initialiser la base de donne
 	public static void initialisationBDD() {
 		bdd.add(Personne.AuzollesM);
 		bdd.add(Personne.BarbosaM);
@@ -52,25 +52,39 @@ public class Main extends Application {
 		bdd.add(Personne.RodriguesS);
 	}
 
+	// methode permettant d'initialiser la matrice creee a partir de la base de
+	// donnee
 	public static Matrice initialisationMatriceImages() {
+		// creation d'une matrice
 		Matrice images = new Matrice(50 * 50, bdd.size() * Personne.AuzollesM.getImages().size());
+		// initialisation de la variable pour la liste des noms des fichiers
 		String[] noms = new String[bdd.size() * Personne.AuzollesM.getImages().size()];
 		int i = 0;
 		for (Personne personne : bdd) {
 			for (personne.Image image : personne.getImages()) {
+				// ajout dans la matrice chaque images de chaque personne
 				images.ajouterImage(image.getPhoto().transfoVect());
+				// ajout du nom de l'image
 				noms[i] = image.getNomImage();
 				i++;
 			}
 		}
 		images.matriceVisage();
+		// ajout la liste des noms dans la matrice
 		images.noms(noms);
+		// initialisation du visage moyen de la matrice
 		images.moyenne();
+		// centralisation des valeurs dans la matrice
 		images.centralisation();
+		// initialisation de la matrice de covariance
 		images.matriceCovariance();
+		// initialisation des valeurs propres
 		images.valeursPropres();
+		// initialisation des vecteurs propres
 		images.vecteursPropres();
+		// initialisation de la matrice de projection
 		images.matriceProjection();
+
 		return images;
 	}
 
@@ -78,26 +92,48 @@ public class Main extends Application {
 	public void start(Stage stage) {
 		stage.setTitle("Logiciel de reconnaissance faciale | Groupe 5");
 
+		initialisationBDD();
 		final Matrice images = initialisationMatriceImages();
-		
-		final int reconstruit = 0;
-		final int K = 20;
-		final int seuil= 8;
 
+		// constante pour le numero de l'image a reconstruire
+		final int reconstruit = 0;
+		// constante pour le numero de l'image a tester pour avoir le graphe d'erreur
+		final int valeurTest = 1;
+		// constante du nombre d'eigenface utilise
+		final int K = 17;
+		// seuil acceptable pour la reconnaissance d'un visage
+		final int seuil = 7;
+
+		// creation de l'image representant le visage moyen
 		Vecteur moy = images.getMoy();
 		moy.transfoMat().affichage("moyenne.jpg");
 
-		Vecteur vecteurImage = images.reconstructionImage(reconstruit,K);
+		// creation de l'image du visage reconstruit
+		Vecteur vecteurImage = images.reconstructionImage(reconstruit, K);
 		vecteurImage.transfoMat().affichage("Image.jpg");
 
+		// creation de l'image avec les 6 premieres eigenfaces
 		images.affichageEigenfaces();
 
+		// on recupere les valeurs propres
+		double[] vp = images.valeursPropres();
+		// Méthode qui donne la variance cumulée en fonction de K
+		double[] varianceCumule = images.normaliserEtAfficherVariation(vp);
+
+		// Première image de la base de référence pour le calcul de l'erreur
+		personne.Image imageTest = new personne.Image(images.getNoms()[valeurTest]);
+		// On compare image à la première image de la base
+		double[] d = images.affichageGraphique(imageTest, valeurTest);
+
+		// fichier pour l'image afficher lors de l'ouverture de la fenetre
 		File fichier = new File("image_base.png");
 		Image image = new Image(fichier.toURI().toString());
+		// creation d'un image view pour l'image
 		ImageView imageView = new ImageView(image);
 		imageView.setFitHeight(150);
 		imageView.setPreserveRatio(true);
 
+		// texte afficher dans la fenetre
 		Label texte = new Label("Projet sur la reconnaissance faciale");
 
 		Button imageReconstruite = new Button("Afficher l'image reconstruite");
@@ -106,43 +142,44 @@ public class Main extends Application {
 		Button grapheErreurs = new Button("Afficher le graphique de l'évolution de l'erreur ");
 		Button testerUneImage = new Button("Choisir une image à tester");
 
+		// image de reference de l'image reconstruite
 		File img_f = new File(images.getNoms()[reconstruit]);
 		String localUrl = img_f.toURI().toString();
-
 		Image img = new Image(localUrl);
+		// creation d'un image view pour l'image de reference
 		ImageView image_r = new ImageView(img);
 		image_r.setFitHeight(150);
 		image_r.setPreserveRatio(true);
 
+		// vbox contenant tous les boutons
 		VBox boutons = new VBox();
 		boutons.getChildren().addAll(imageReconstruite, moyenne, eigenfaces, grapheErreurs, testerUneImage);
 
+		// vbox pour afficher les informations en fonction du boutons clique
 		VBox informations = new VBox();
 		informations.getChildren().addAll(texte, imageView);
 
+		// panneau general de l'ihm
 		HBox general = new HBox();
 		general.getChildren().addAll(informations, boutons);
 		general.setPrefSize(1200, 500);
 
-		// On récupère les distances et les points de la courbe
-		List<String> distPoint = getParameters().getUnnamed();
-
 		// Taille pour les distances
-		int tailleDist = distPoint.size() / 2 + 1;
+		int tailleDist = d.length;
 
 		// Création des K catégories pour les distances
 		final List<BarChart.Series> seriesList = new LinkedList<>();
-		final String[] categoriesNames = new String[tailleDist - 1];
-		for (int i = 0; i < tailleDist - 1; i++) {
-			int j = i + 1;
-			categoriesNames[i] = "" + j;
+		final String[] categoriesNames = new String[tailleDist];
+		for (int i = 0; i < tailleDist; i++) {
+			categoriesNames[i] = "" + i;
 		}
 
 		// Ajout de la série Erreur et ajout des valeurs
 		final String[] seriesNames = { "Erreur" };
 		final double[][] allValues = new double[1][tailleDist];
-		for (int i = 0; i < tailleDist - 1; i++) {
-			allValues[0][i] = Double.parseDouble(distPoint.get(i + 1));
+		for (int i = 0; i < tailleDist; i++) {
+			allValues[0][i] = d[i];
+
 		}
 
 		// On fixe les axes
@@ -179,7 +216,7 @@ public class Main extends Application {
 		chart.getData().setAll(seriesList);
 
 		// Création de la courbe pour les variances cumulées
-		final NumberAxis xAxis2 = new NumberAxis(1, tailleDist - 1, 1);
+		final NumberAxis xAxis2 = new NumberAxis(1, varianceCumule.length, 1);
 		final NumberAxis yAxis2 = new NumberAxis();
 
 		// Déclaration d'une courbe
@@ -193,9 +230,8 @@ public class Main extends Application {
 		seriesVar.setName("Pourcentage de variance cumulée");
 
 		// On ajoute toutes les valeurs
-		for (int i = tailleDist; i < distPoint.size(); i++) {
-			seriesVar.getData()
-					.add(new XYChart.Data<Number, Number>(i + 1 - tailleDist, Double.parseDouble(distPoint.get(i))));
+		for (int i = 0; i < varianceCumule.length; i++) {
+			seriesVar.getData().add(new XYChart.Data<Number, Number>(i + 1, varianceCumule[i]));
 		}
 
 		/* Pour la courbe */
@@ -218,28 +254,43 @@ public class Main extends Application {
 		imageReconstruite.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				// suppression de l'affichage precedent
 				informations.getChildren().remove(1);
 
+				// creation et insertion dans l'imageView d'une image contenant la
+				// reconstruction d'un visage de la base de donnee
 				Image image = new Image(new File("Image.jpg").toURI().toString());
 				imageView.setImage(image);
+
+				// hbox pour pouvoir comparer l'image de reference et l'image reconstruite
 				HBox images = new HBox();
 				images.getChildren().addAll(imageView, image_r);
+
+				// modification du texte
 				texte.setText("Visage de la base de donnée reconstruit");
+
+				// ajout des images dans l'affichage
 				informations.getChildren().add(images);
 			}
 		});
 
+		// evenement pour afficher les eigenfaces
 		eigenfaces.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
+				// suppression de l'affichage precedent
 				informations.getChildren().remove(1);
 
+				// creation d'une image a partir du fichier image des eigenfaces
 				Image image = new Image(new File("eigenfaces.jpg").toURI().toString());
+				// ajout de l'image dans l'image view
 				imageView.setImage(image);
 
+				// modification du texte
 				texte.setText("Les 6 premiers eigenfaces");
 
+				// ajout de l'imageView dans l'affichage
 				informations.getChildren().add(imageView);
 
 			}
@@ -250,11 +301,14 @@ public class Main extends Application {
 		grapheErreurs.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
+				// suppression de l'affichage precedent
 				informations.getChildren().remove(1);
+				// ajout des graphes dans l'affichage
 				informations.getChildren().add(graphes);
 			}
 		});
 
+		// evenement pour faire la reconnaissance faciale sur une image
 		testerUneImage.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -275,22 +329,30 @@ public class Main extends Application {
 				// on cree une nouvelle image a partir du fichier choisi
 				personne.Image imageC = new personne.Image(imageChoisi.getPath());
 
-			
+				// on fait la reconnaissance sur l'image choisi
 				int i = images.reconnaissance(imageC, K, seuil);
 
-				
+				// modification du texte a afficher
 				texte.setText("Teste de reconnaissance facial");
+
+				// creation d'une nouvelle vbox pour afficher les resultats
 				VBox resultats = new VBox();
 
-				
+				// si la reconnaissance n'a pas fonctionne on affiche seulement un texte
 				if (i == -1) {
 					Label resultat = new Label("Personne n'a été trouvé");
 					resultats.getChildren().addAll(imageView, resultat);
 				} else {
+					// si la reconnaissance a fonctionne
+
+					// creation d'un nouvel imageView
 					ImageView viewTrouve = new ImageView();
+					// creation et insertion dans l'imageView de l'image trouve par la
+					// reconnaissance
 					viewTrouve.setImage(new Image(new File(images.getNoms()[i]).toURI().toString()));
 					viewTrouve.setFitHeight(150);
 					viewTrouve.setPreserveRatio(true);
+					// on recupere le chemin de l'image trouvee
 					String nom = images.getNoms()[i];
 
 					// On separe le nom de l'image selon '_' puis selon '/' pour recuperer que le
@@ -300,29 +362,38 @@ public class Main extends Application {
 					String[] chaineAvecPrenom = nomSansUnderscore[1].split("/");
 					String personne = chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
 
+					// creation d'un texte contenant le nom de la personne retrouve
 					Label resultat = new Label(personne + " est reconnu depuis l'image de gauche.");
+					// hbox pour pouvoir comparer l'image choisie et l'image trouvee
 					HBox imagesAffichees = new HBox();
 					imagesAffichees.getChildren().addAll(imageView, viewTrouve);
+					// ajout des resultats dans le vbox
 					resultats.getChildren().addAll(imagesAffichees, resultat);
 
 				}
-
+				// ajout des resultats dans l'affichage
 				informations.getChildren().add(resultats);
 
 			}
 		});
 
+		// evenement pour afficher le visage moyen
 		moyenne.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
+				// suppression de l'affichage precedent
 				informations.getChildren().remove(1);
 
+				// creation et insertion dans l'imageView d'une image avec le fichier image du
+				// visage moyen
 				Image image = new Image(new File("moyenne.jpg").toURI().toString());
 				imageView.setImage(image);
 
+				// modification du texte
 				texte.setText("Visage moyenne de la base de donnée ");
 
+				// ajout dans l'affichage
 				informations.getChildren().add(imageView);
 
 			}
@@ -339,120 +410,6 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		initialisationBDD();
-		Matrice images = initialisationMatriceImages();
-
-		int K = 20;
-		int seuil = 8;
-		
-		double[] vp = images.valeursPropres();
-
-		// Méthode qui donne la variance cumulée en fonction de K
-		double[] res = images.normaliserEtAfficherVariation(vp);
-
-		// Première image de la base de référence pour le calcul de l'erreur
-		personne.Image image = new personne.Image("../BDD/Train/LASGLEIZES_David/LASGLEIZES_David_3.jpg");
-
-		// On teste la reconnaissance avec toutes les images d'une personne de la base
-		// d'apprentissage
-		// Les distances sont presques nulles
-		for (int im = 1; im < 4; im++) {
-			personne.Image test = new personne.Image("../BDD/Train/AUZOLLES_Melina/AUZOLLES_Melina_" + im + ".jpg");
-			int i = images.reconnaissance(test, K, seuil);
-			System.out.println("Apprentissage " + im);
-
-			// Si i est different de -1, c'est qu'une correspondance a ete trouvee
-			if (i != -1) {
-				// On recupere le nom et le prenom via le nom image de la forme
-				// ../BDD/NOM_Prenom∕NOM_Prenom_i.jpg
-				String nom = images.getNoms()[i];
-
-				// On separe le nom de l'image selon '_' puis selon '/' pour recuperer que le
-				// nom et le prenom
-				String[] nomSansUnderscore = nom.split("_", 2);
-				String[] chaineAvecNom = nomSansUnderscore[0].split("/");
-				String[] chaineAvecPrenom = nomSansUnderscore[1].split("/");
-				String personne = chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
-
-				// Affichage du nom et de la distance recalculee
-				System.out.println("Ce visage correspond à celui de " + personne);
-				double[] projection = images.projection(test, K);
-				double distance = 0;
-				for (int j = 0; j < projection.length; j++) {
-					distance += Math.pow(images.getMatriceProjection().get(i, j) - projection[j], 2);
-				}
-				distance = Math.sqrt(distance);
-				System.out.println("La distance est de : " + distance);
-			} else {
-				// Le seuil n'est pas respecte
-				System.out.println("Ce visage n'appartient pas à la base");
-			}
-			System.out.println("\n");
-		}
-
-		// On teste la reconnaissance avec toutes les images de la base de test,
-		// personne dans la base et personne pas dans la base,
-
-		// le ratio de bonnes reponses est de 14/17 avec les 15 premieres eigenfaces et
-		// un seuil de 5
-
-		// Les distances sont entre 1 et 5
-		for (int im = 1; im < 18; im++) {
-			personne.Image test = new personne.Image("../BDD/Test/" + im + ".jpg");
-			int i = images.reconnaissance(test, K, seuil);
-			System.out.println("Test " + im);
-
-			// Si i est different de -1, c'est qu'une correspondance a ete trouvee
-			if (i != -1) {
-				// On recupere le nom et le prenom via le nom image de la forme
-				// ../BDD/NOM_Prenom∕NOM_Prenom_i.jpg
-				String nom = images.getNoms()[i];
-
-				// On separe le nom de l'image selon '_' puis selon '/' pour recuperer que le
-				// nom et le prenom
-				String[] nomSansUnderscore = nom.split("_", 2);
-				String[] chaineAvecNom = nomSansUnderscore[0].split("/");
-				String[] chaineAvecPrenom = nomSansUnderscore[1].split("/");
-				String personne = chaineAvecNom[chaineAvecNom.length - 1] + " " + chaineAvecPrenom[0];
-
-				// Affichage du nom et de la distance recalculee
-				System.out.println("Ce visage correspond à celui de " + personne);
-				double[] projection = images.projection(test, K);
-				double distance = 0;
-				for (int j = 0; j < projection.length; j++) {
-					distance += Math.pow(images.getMatriceProjection().get(i, j) - projection[j], 2);
-				}
-				distance = Math.sqrt(distance);
-				System.out.println("La distance est de : " + distance);
-			} else {
-				// Le seuil n'est pas respecte
-				System.out.println("Ce visage n'appartient pas à la base");
-			}
-			System.out.println("\n");
-		}
-
-		// images.affichageEigenfaces();
-
-		// Image de la bonne personne mais avec une image de test pour le calcul de
-		// l'erreur
-		// On récupère les valeurs des erreurs en fonction de K
-
-		// On compare image à la première image de la base
-		double[] d = images.affichageGraphique(image, 0);
-		// On ajoute toutes les valeurs dedistances puis la variance cumulée en fonction
-		// de K dans une chaîne
-		String[] s = new String[d.length + res.length];
-		for (int i = 0; i < d.length; i++) {
-			s[i] = "" + d[i];
-		}
-		for (int i = d.length; i < s.length; i++) {
-			s[i] = "" + res[i - d.length];
-		}
-
-		// On lance la méthode start avec notre paramètre et on affiche les deux
-		// graphiques
-
-		
-		launch(s);
+		launch();
 	}
 }
