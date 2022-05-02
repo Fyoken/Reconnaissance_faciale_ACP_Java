@@ -8,12 +8,23 @@ public class Personne{
 	private String prenom;
 	private Set<Image> images;
 	
-	//Constructeur
+	/*
+	 * Objectif : Construire une personne avec son nom, prenom, et ses images donnés
+	 * @param : nom 	(nom de la personne)
+	 * 			prenom  (prénom de la personne)
+	 * 			images  (les images associées à la personne)
+	 */
 	public Personne(String nom, String prenom, Set<Image> images) {
 		this.nom = nom;
 		this.prenom = prenom;
 		this.images = images;
 	}
+	
+	/*
+	 * Objectif : Construire une personne avec son nom et prénom de donnés
+	 * @param : nom 	(nom de la personne)
+	 * 			prenom  (prénom de la personne)
+	 */
 	public Personne(String nom, String prenom) {
 		this.nom = nom;
 		this.prenom = prenom;
@@ -21,6 +32,10 @@ public class Personne{
 		this.ajouterImages();
 	}
 	
+	/*
+	 * Objectif des méthodes ci-dessous : Créer toutes les personnes que nous avons dans notre base de données
+	 * 										en utilisant seulement le nom et le prénom
+	 */
 	public static final Personne AuzollesM=new Personne("AUZOLLES","Melina");
 	public static final Personne BarbosaM=new Personne("BARBOSA","Mathias");
 	public static final Personne ChambasM=new Personne("CHAMBAS","Mathilde");
@@ -37,34 +52,57 @@ public class Personne{
 	public static final Personne RodriguesS=new Personne("RODRIGUES","Samuel");
 	
 	
-	//Get et Set pour le prénom
+	/*
+	 * Objectif : Obtenir le nom de la personne
+	 * @return : nom (nom de la personne)
+	 */
 	public String getNom() {
 		return nom;
 	}
+	
+	/*
+	 * Objectif : Modifier le nom de la personne
+	 * @param : nom (le nouveau nom de la personne)
+	 */
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
 	
-	
-	//Get et set pour le nom
+	/*
+	 * Objectif : Obtenir le prénom de la personne
+	 * @return : prenom (le prénom de la personne)
+	 */
 	public String getPrenom() {
 		return prenom;
 	}
+	
+	/*
+	 * Objectif : Modifier le prénom de la personne
+	 * @param : prenom (le nouveau prénom de la personne)
+	 */
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
 
-	
-	//Get et Set pour les images
+	/*
+	 * Objectif : Obtenir l'ensemble des images de la personne
+	 * @return : images (l'ensemble des images de la personne)
+	 */
 	public Set<Image> getImages() {
 		return images;
 	}
 
+	/*
+	 * Objectif : Modifier l'ensemble des images de la personne
+	 * @param : images (le nouvel ensemble des images de la personne)
+	 */
 	public void setImages(Set<Image> images) {
 		this.images = images;
 	}
 	
-	//Méthode permettant d'ajouter directement toutes les images d'une personne dans le set
+	/*
+	 * Objectif : Ajouter directement toutes les images d'une personne à l'ensemble
+	 */
 	public void ajouterImages() {
 		//On déclare nom pour stocker l'information du nom et prénom de la personne
 		String nomImage = this.getNom() + "_" + this.getPrenom();
