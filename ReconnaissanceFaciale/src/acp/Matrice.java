@@ -331,7 +331,7 @@ public class Matrice {
 
 	/*
 	 * Objectif : Recréer une image grâce à la matrice de projection
-	 * @param : i (la numéro de l'image à recréer)
+	 * @param : i (l'indice de l'image à recréer)
 	 * 			k (le nombre d'eigenface utilisé)
 	 * @return : imageI (le vecteur de l'image recrée)
 	 */
