@@ -668,7 +668,7 @@ public class Matrice {
 	 * @param : img (l'image dont on doit trouver la correspondance)
 	 * 			K 	(le nombre d'eigenfaces)
 	 * 			s 	(la distance à ne pas dépasser)
-	 * @return : indice (l'indice de la personne avec qui la corresponce à fonctionné,
+	 * @return : indice (l'indice de l'image avec qui la correspondance à fonctionné,
 	 * 						retourne -1 si cela ne correspond à personne)
 	 */
 	public int reconnaissance(Image image, int K, int s) {
