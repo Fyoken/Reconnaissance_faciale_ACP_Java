@@ -326,8 +326,11 @@ public class Main extends Application {
 			public void handle(ActionEvent event) {
 				// suppression de l'affichage precedent
 				informations.getChildren().remove(1);
+				// modification du texte
+				texte.setText("Graphiques liées aux valeurs propres");
 				// ajout des graphes dans l'affichage
 				informations.getChildren().add(graphes);
+				
 			}
 		});
 		
@@ -337,6 +340,8 @@ public class Main extends Application {
 			public void handle(ActionEvent event) {
 				// suppression de l'affichage precedent
 				informations.getChildren().remove(1);
+				// modification du texte
+				texte.setText("Evolution de l'erreur en fonction de K");
 				// ajout du graphes dans l'affichage
 				informations.getChildren().add(histo);
 
