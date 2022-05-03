@@ -26,7 +26,7 @@ public class Matrice {
 	private Matrix matriceVisage;
 	private Pixel[][] matriceCentralisee;
 
-	/*
+	/**
 	 * Objectif : Retourner la matrice centralisée
 	 * @return matriceCentralisee (la matrice centralisée)
 	 */
@@ -34,23 +34,23 @@ public class Matrice {
 		return matriceCentralisee;
 	}
 
-	/*
+	/**
 	 * Objectif : Changer les valeurs de la matrice centralisée
-	 * @param matriceCentralisee (la nouvelle matrice centralisée, avec les nouvelles valeurs)
+	 * @param matriceCentralisee la nouvelle matrice centralisée, avec les nouvelles valeurs
 	 */
 	public void setMatriceCentralisee(Pixel[][] matriceCentralisee) {
 		this.matriceCentralisee = matriceCentralisee;
 	}
 	
-	/*
+	/**
 	 * Objectif : Retourner la matrice de visages
-	 * @return matriceVisage (la matrice de visages)
+	 * @return matriceVisage la matrice de visages
 	 */
 	public Matrix getMatriceVisage() {
 		return matriceVisage;
 	}
 
-	/*
+	/**
 	 * Objectif : Changer les valeurs de la matrice visage
 	 * @param matriceVisage (la nouvelle matrice de visage, avec les nouvelles valeurs)
 	 */
@@ -58,25 +58,26 @@ public class Matrice {
 		this.matriceVisage = matriceVisage;
 	}
 
-	/*
+	/**
 	 * Objectif : Retourner les noms de la matrice
-	 * @return : noms 
+	 * @return noms 
 	 */
 	public String[] getNoms() {
 		return noms;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier les valeurs des strings des noms
-	 * @param : noms (les valeurs modifiées des noms)
+	 * @param noms les valeurs modifiées des noms
 	 */
 	public void setNoms(String[] noms) {
 		this.noms = noms;
 	}
 
-	/*
+	/**
 	 * Objectif : Construire une matrice selon une taille donnée, avec les valeurs des pixels se situant à la position n et m
-	 * @param : n, m (respectivement le nombre de lignes et le nombre de colonnes)
+	 * @param n le nombre de lignes 
+	 * @param m le nombre de colonnes
 	 */
 	public Matrice(int n, int m) {
 		this.n = n;
@@ -84,143 +85,143 @@ public class Matrice {
 		this.pixels = new Pixel[this.n][this.m];
 	}
 
-	/*
+	/**
 	 * Objectif : Avoir le nombre de ligne de la matrice
-	 * @return : n (le nombre de ligne de la matrice)
+	 * @return n le nombre de ligne de la matrice
 	 */
 	public final int getN() {
 		return n;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier le nombre de ligne de la matrice
-	 * @param : n (le nouveau nombre de ligne de la matrice)
+	 * @param n le nouveau nombre de ligne de la matrice
 	 */
 	public final void setN(int n) {
 		this.n = n;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir le nombre de colonne de la matrice
-	 * @return : m (le nouveau nombre de colonne de la matrice)
+	 * @return m le nouveau nombre de colonne de la matrice
 	 */
 	public final int getM() {
 		return m;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier le nombre de colonne de la matrice
-	 * @param : m (le nouveau nombre de colonne de la matrice)
+	 * @param m le nouveau nombre de colonne de la matrice
 	 */
 	public final void setM(int m) {
 		this.m = m;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir le tableau à 2 dimensions de pixels
-	 * @return : pixels (le tableau de pixel)
+	 * @return pixels le tableau de pixel
 	 */
 	public final Pixel[][] getPixels() {
 		return pixels;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier les valeurs du tableau de pixels
-	 * @param : pixels (le tableau avec les nouvelles valeurs de pixels)
+	 * @param pixels le tableau avec les nouvelles valeurs de pixels
 	 */
 	public final void setPixels(Pixel[][] pixels) {
 		this.pixels = pixels;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir la matrice de covariance
-	 * @return : matriceCovariance (la matrice de covariance)
+	 * @return matriceCovariance la matrice de covariance
 	 */
 	public final Matrix getMatriceCovariance() {
 		return matriceCovariance;
 	}
 	
-	/*
+	/**
 	 * Objectif : Modifier les valeurs de la matrice de covariance
-	 * @param : matriceCovariance (les nouvelles valeurs de la matrice de covariance)
+	 * @param matriceCovariance les nouvelles valeurs de la matrice de covariance
 	 */
 	public final void setMatriceCovariance(Matrix matriceCovariance) {
 		this.matriceCovariance = matriceCovariance;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir les valeurs propres
-	 * @return : valeursPropres (les valeurs propres de la matrice)
+	 * @return valeursPropres les valeurs propres de la matrice
 	 */
 	public final SingularValueDecomposition getValeursPropres() {
 		return valeursPropres;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier les valeurs propres
-	 * @param : valeursPropres (les nouvelles valeurs propres)
+	 * @param valeursPropres les nouvelles valeurs propres
 	 */
 	public final void setValeursPropres(SingularValueDecomposition valeursPropres) {
 		this.valeursPropres = valeursPropres;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir les vecteurs propres
-	 * @return : vecteursPropres (les vecteurs propres)
+	 * @return vecteursPropres les vecteurs propres
 	 */
 	public final Matrix getVecteursPropres() {
 		return vecteursPropres;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier les valeurs des vecteurs propres
-	 * @param : vecteursPropres (les nouvelles valeurs des vecteurs propres)
+	 * @param vecteursPropres les nouvelles valeurs des vecteurs propres
 	 */
 	public final void setVecteursPropres(Matrix vecteursPropres) {
 		this.vecteursPropres = vecteursPropres;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir la matrice de projection
-	 * @return : matriceProjection (la matrice de projection)
+	 * @return matriceProjection la matrice de projection
 	 */
 	public final Matrix getMatriceProjection() {
 		return matriceProjection;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier les valeur de la matrice de projection
-	 * @param : matriceProjection (les nouvelles valeurs de la matrice de projection)
+	 * @param matriceProjection les nouvelles valeurs de la matrice de projection
 	 */
 	public final void setMatriceProjection(Matrix matriceProjection) {
 		this.matriceProjection = matriceProjection;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir la moyenne de la matrice
-	 * @return : moy (la moyenne de la matrice)
+	 * @return  moy la moyenne de la matrice
 	 */
 	public Vecteur getMoy() {
 		return moy;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier la valeur de la moyenne
-	 * @param : moy (la nouvelle moyenne)
+	 * @param moy la nouvelle moyenne
 	 */
 	public void setMoy(Vecteur moy) {
 		this.moy = moy;
 	}
 
-	/*
+	/**
 	 * Objectif : Initialiser les noms
-	 * @param : nom (une nouvelle liste de noms)
+	 * @param noms une nouvelle liste de noms
 	 */
 	public void noms(String[] noms) {
 		setNoms(noms);
 	}
 
-	/*
+	/**
 	 * Objectif : Initialiser la matrice de visage
 	 */
 	public void matriceVisage() {
@@ -234,7 +235,7 @@ public class Matrice {
 		this.setMatriceVisage(mVis);
 	}
 
-	/*
+	/**
 	 * Objectif : Initialiser la matrice de covariance réduite
 	 */
 	public void matriceCovariance() {
@@ -256,9 +257,9 @@ public class Matrice {
 		this.setMatriceCovariance(mCov);
 	}
 
-	/*
+	/**
 	 * Objectif : Récupérer et initialiser les valeurs propres de la matrice de covariance réduite
-	 * @return : this.valeursPropres.getSingularValues (les valeurs propres de l'objet actuel)
+	 * @return this.valeursPropres.getSingularValues les valeurs propres de l'objet actuel
 	 */
 	public double[] valeursPropres() {
 		SingularValueDecomposition svd = this.matriceCovariance.svd();
@@ -267,9 +268,9 @@ public class Matrice {
 		return this.valeursPropres.getSingularValues();
 	}
 
-	/*
+	/**
 	 * Objectif : Calculer les vecteurs propres
-	 * @return : U (la matrice de vecteurs propres)
+	 * @return U la matrice de vecteurs propres
 	 */
 	public Matrix vecteursPropres() {
 		// creation d'une matrice de la meme taille que la matrice images
@@ -304,9 +305,9 @@ public class Matrice {
 		return U;
 	}
 
-	/*
+	/**
 	 * Objectif : Calculer la matrice de projection
-	 * @return : mProj (la matrice de projection des visages)
+	 * @return mProj la matrice de projection des visages
 	 */
 	public Matrix matriceProjection() {
 		// creation d'une nouvelle matrice
@@ -329,11 +330,11 @@ public class Matrice {
 		return mProj;
 	}
 
-	/*
+	/**
 	 * Objectif : Recréer une image grâce à la matrice de projection
-	 * @param : i (l'indice de l'image à recréer)
-	 * 			k (le nombre d'eigenface utilisé)
-	 * @return : imageI (le vecteur de l'image recrée)
+	 * @param  i l'indice de l'image à recréer
+	 * @param K le nombre d'eigenface utilisé
+	 * @return imageI le vecteur de l'image recrée
 	 */
 	public Vecteur reconstructionImage(int i, int K) {
 		// creation d'un vecteur de retour
@@ -354,9 +355,9 @@ public class Matrice {
 		return imageI;
 	}
 
-	/*
+	/**
 	 * Objectif : Calculer le vecteur moyen
-	 * @return : moy (le vecteur moyen)
+	 * @return  moy (le vecteur moyen)
 	 */
 	public Vecteur moyenne() {
 		// creation d'un vecteur de retour
@@ -376,7 +377,7 @@ public class Matrice {
 		return moy;
 	}
 
-	/*
+	/**
 	 * Objectif : Centraliser tous les vecteurs images de la matrice
 	 */
 	public void centralisation() {
@@ -397,9 +398,9 @@ public class Matrice {
 		this.setMatriceCentralisee(A);
 	}
 
-	/*
+	/**
 	 * Objectif : Transformer une matrice en vecteur
-	 * @return : vec (le vecteur de la matrice)
+	 * @return vec (le vecteur de la matrice)
 	 */
 	public Vecteur transfoVect() {
 		// transformation de matrice à vecteur
@@ -420,9 +421,9 @@ public class Matrice {
 		return vec;
 	}
 
-	/*
+	/**
 	 * Objectif : Afficher une matrice en niveau de gris
-	 * @param : name (le nom de la personne correspondante)
+	 * @param name le nom de la personne correspondante
 	 */
 	public void affichage(String name) {
 		// Déclaration des variables
@@ -463,9 +464,9 @@ public class Matrice {
 		}
 	}
 
-	/*
+	/**
 	 * Objectif : Ajouter un vecteur à la prochaine colonne vide de la matrice
-	 * @param : v (le vecteur à ajouter à la matrice)
+	 * @param v le vecteur à ajouter à la matrice
 	 */
 	public void ajouterImage(Vecteur v) {
 		int i = 0;
@@ -483,7 +484,7 @@ public class Matrice {
 
 	}
 
-	/*
+	/**
 	 * Objectif : Afficher les eigenfaces
 	 */
 	public void affichageEigenfaces() {
@@ -539,11 +540,11 @@ public class Matrice {
 		}
 	}
 
-	/*
+	/**
 	 * Objectif : Afficher le graphique de l'évolution de l'erreur pour une image et pour différentes valeur de K
-	 * @param : img (l'image dont on veut afficher le graphique d'erreur)
-	 * 			n 	(le numéro de l'image soumise à K)
-	 * @return : d (un tableau de double avec les différentes valeurs de l'erreur)
+	 * @param  img l'image dont on veut afficher le graphique d'erreur
+	 * 	@param 	n 	le numéro de l'image soumise à K
+	 * @return  d un tableau de double avec les différentes valeurs de l'erreur
 	 */
 	public double[] affichageGraphique(Image img, int n) {
 
@@ -575,10 +576,10 @@ public class Matrice {
 
 	}
 
-	/*
+	/**
 	 * Objectif : Normaliser les valeurs propres et afficher l'évolution de la variance cumulée des eigenfaces
-	 * @param : vp (le tableau des valeurs propres)
-	 * @return : affichage (le tableau contenant les valeurs propres normalisées)
+	 * @param  vp le tableau des valeurs propres
+	 * @return  affichage (le tableau contenant les valeurs propres normalisées
 	 */
 	public double[] normaliserEtAfficherVariation(double[] vp) {
 		// Valeur de normalisation qui vaut la somme des valeurs propres
@@ -603,11 +604,11 @@ public class Matrice {
 		return affichage;
 	}
 
-	/*
+	/**
 	 * Objectif : Projeter une image
-	 * @param : img (l'image à projeter)
-	 * 			K : le nombre d'eigenfaces
-	 * @return : projection (le tableau de l'image projetée)
+	 * @param  img l'image à projeter
+	 * 	@param	K  le nombre d'eigenfaces
+	 * @return  projection le tableau de l'image projetée
 	 */
 	public double[] projection(Image img, int K) {
 		// creation d'un vecteur a partir de l'image
@@ -633,7 +634,7 @@ public class Matrice {
 		return projection;
 	}
 
-	/*
+	/**
 	 * Objectif : Stocker les projections des images de références
 	 */
 	public void projectionReference() {
@@ -663,13 +664,12 @@ public class Matrice {
 		}
 	}
 
-	/*
+	/**
 	 * Objectif : Trouver l'image la plus ressemblante à celle passée en paramètre
-	 * @param : img (l'image dont on doit trouver la correspondance)
-	 * 			K 	(le nombre d'eigenfaces)
-	 * 			s 	(la distance à ne pas dépasser)
-	 * @return : indice (l'indice de l'image avec qui la correspondance à fonctionné,
-	 * 						retourne -1 si cela ne correspond à personne)
+	 * @param image l'image dont on doit trouver la correspondance
+	 * @param	K 	le nombre d'eigenfaces
+	 * @param s  la distance à ne pas dépasser
+	 * @return indice l'indice de l'image avec qui la correspondance à fonctionné, retourne -1 si cela ne correspond à personne
 	 */
 	public int reconnaissance(Image image, int K, int s) {
 		//recuperation de la projection de l'image

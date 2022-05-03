@@ -17,9 +17,9 @@ public class Image {
 	protected String nomImage;
 	protected Matrice photo;
 
-	/*
+	/**
 	 * Objectif : Construire une nouvelle image avec le nom donnée
-	 * @param : nomImage (la localisation de l'image depuis le dossier src/)
+	 * @param nomImage la localisation de l'image depuis le dossier src/
 	 */
 	public Image(String nomImage) {
 		this.nomImage = nomImage;
@@ -28,49 +28,49 @@ public class Image {
 		this.transformationNiveauGris();
 	}
 	
-	/*
+	/**
 	 * Objectif : Construire une nouvelle image avec le nom et la matrice associée à l'image donnée
-	 * @param : nomImage (la localisation de l'image depuis le dossie src/)
-	 * 			mat		 (la matrice associée à l'image)
+	 * @param nomImage la localisation de l'image depuis le dossie src/
+	 * @param mat la matrice associée à l'image
 	 */
 	public Image(String nomImage, Matrice mat) {
 		this.nomImage = nomImage;
 		this.photo = mat;
 	}
 	
-	/*
+	/**
 	 * Objectif : Obtenir l'image (le lien ou est stockée l'image)
-	 * @return : nomImage (le lien où est stockée l'image)
+	 * @return nomImage le lien où est stockée l'image
 	 */
 	public String getNomImage() {
 		return nomImage;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier l'image (le lien ou est stockée l'image)
-	 * @param : nomImage (le nouveau lien où est stockée l'image)
+	 * @param nomImage le nouveau lien où est stockée l'image
 	 */
 	public void setNomImage(String nomImage) {
 		this.nomImage = nomImage;
 	}	
 	
-	/*
+	/**
 	 * Objectif : Obtenir la matrice liée à l'image
-	 * @return : photo (la matrice liée à l'image)
+	 * @return photo la matrice liée à l'image
 	 */
 	public final Matrice getPhoto() {
 		return photo;
 	}
 	
-	/*
+	/**
 	 * Objectif : Modifier la matrice liée à l'image
-	 * @param : photo (la nouvelle matrice liée à l'image)
+	 * @param photo la nouvelle matrice liée à l'image
 	 */
 	public final void setPhoto(Matrice photo) {
 		this.photo = photo;
 	}
 	
-	/*
+	/**
 	 * Objectif : Redimensionner la taille d'une image et la passer en niveau de gris
 	 */
 	public void changeSize() {
@@ -109,7 +109,7 @@ public class Image {
 		}
 	}
 	
-	/*
+	/**
 	 * Objectif : Récupérer une image
 	 */
 	public void transformationNiveauGris() {
@@ -131,9 +131,9 @@ public class Image {
 		}	      
 	}
 
-	/*
+	/**
 	 * Objectif : Retourner le nom de l'image (le lien où l'image est stockée) sous forme de string (texte)
-	 * @return : this.getNomImages() (le string du lien où l'image est stockée)
+	 * @return this.getNomImages() (le string du lien où l'image est stockée)
 	 */
 	@Override
 	public String toString() {

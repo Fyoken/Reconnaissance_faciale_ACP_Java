@@ -8,11 +8,11 @@ public class Personne{
 	private String prenom;
 	private Set<Image> images;
 	
-	/*
+	/**
 	 * Objectif : Construire une personne avec son nom, prenom, et ses images donnés
-	 * @param : nom 	(nom de la personne)
-	 * 			prenom  (prénom de la personne)
-	 * 			images  (les images associées à la personne)
+	 * @param nom 	nom de la personne
+	 * @param prenom  prénom de la personne
+	 * 	@param images  les images associées à la personne
 	 */
 	public Personne(String nom, String prenom, Set<Image> images) {
 		this.nom = nom;
@@ -20,10 +20,10 @@ public class Personne{
 		this.images = images;
 	}
 	
-	/*
+	/**
 	 * Objectif : Construire une personne avec son nom et prénom de donnés
-	 * @param : nom 	(nom de la personne)
-	 * 			prenom  (prénom de la personne)
+	 * @param nom 	nom de la personne
+	 * 	@param	prenom  prénom de la personne
 	 */
 	public Personne(String nom, String prenom) {
 		this.nom = nom;
@@ -52,55 +52,55 @@ public class Personne{
 	public static final Personne RodriguesS=new Personne("RODRIGUES","Samuel");
 	
 	
-	/*
+	/**
 	 * Objectif : Obtenir le nom de la personne
-	 * @return : nom (nom de la personne)
+	 * @return nom (nom de la personne)
 	 */
 	public String getNom() {
 		return nom;
 	}
 	
-	/*
+	/**
 	 * Objectif : Modifier le nom de la personne
-	 * @param : nom (le nouveau nom de la personne)
+	 * @param nom (le nouveau nom de la personne)
 	 */
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
 	
-	/*
+	/**
 	 * Objectif : Obtenir le prénom de la personne
-	 * @return : prenom (le prénom de la personne)
+	 * @return prenom (le prénom de la personne)
 	 */
 	public String getPrenom() {
 		return prenom;
 	}
 	
-	/*
+	/**
 	 * Objectif : Modifier le prénom de la personne
-	 * @param : prenom (le nouveau prénom de la personne)
+	 * @param prenom (le nouveau prénom de la personne)
 	 */
 	public void setPrenom(String prenom) {
 		this.prenom = prenom;
 	}
 
-	/*
+	/**
 	 * Objectif : Obtenir l'ensemble des images de la personne
-	 * @return : images (l'ensemble des images de la personne)
+	 * @return images (l'ensemble des images de la personne)
 	 */
 	public Set<Image> getImages() {
 		return images;
 	}
 
-	/*
+	/**
 	 * Objectif : Modifier l'ensemble des images de la personne
-	 * @param : images (le nouvel ensemble des images de la personne)
+	 * @param images (le nouvel ensemble des images de la personne)
 	 */
 	public void setImages(Set<Image> images) {
 		this.images = images;
 	}
 	
-	/*
+	/**
 	 * Objectif : Ajouter directement toutes les images d'une personne à l'ensemble
 	 */
 	public void ajouterImages() {
