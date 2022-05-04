@@ -130,7 +130,7 @@ public class Main extends Application {
 		Image image = new Image(fichier.toURI().toString());
 		// creation d'un image view pour l'image
 		ImageView imageView = new ImageView(image);
-		imageView.setFitHeight(150);
+		imageView.setFitHeight(300);
 		imageView.setPreserveRatio(true);
 
 		// texte affiché dans la fenetre
@@ -149,7 +149,7 @@ public class Main extends Application {
 		Image img = new Image(localUrl);
 		// creation d'un image view pour l'image de reference
 		ImageView image_r = new ImageView(img);
-		image_r.setFitHeight(150);
+		image_r.setFitHeight(300);
 		image_r.setPreserveRatio(true);
 
 		// vbox contenant tous les boutons
@@ -390,7 +390,7 @@ public class Main extends Application {
 					// creation et insertion dans l'imageView de l'image trouve par la
 					// reconnaissance
 					viewTrouve.setImage(new Image(new File(images.getNoms()[i]).toURI().toString()));
-					viewTrouve.setFitHeight(150);
+					viewTrouve.setFitHeight(300);
 					viewTrouve.setPreserveRatio(true);
 					// on recupere le chemin de l'image trouvee
 					String nom = images.getNoms()[i];
