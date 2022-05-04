@@ -100,7 +100,7 @@ public class Main extends Application {
 		// constante pour le numero de l'image a tester pour avoir le graphe d'erreur
 		final int valeurTest = 1;
 		// constante du nombre d'eigenface utilise
-		final int K = 17;
+		final int K = 20;
 		// seuil acceptable pour la reconnaissance d'un visage
 		final int seuil = 7;
 
