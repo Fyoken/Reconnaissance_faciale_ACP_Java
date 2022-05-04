@@ -133,7 +133,7 @@ public class Main extends Application {
 		imageView.setFitHeight(150);
 		imageView.setPreserveRatio(true);
 
-		// texte afficher dans la fenetre
+		// texte affiché dans la fenetre
 		Label texte = new Label("Projet sur la reconnaissance faciale");
 
 		Button imageReconstruite = new Button("Afficher l'image reconstruite");
