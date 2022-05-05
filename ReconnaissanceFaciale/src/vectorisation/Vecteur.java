@@ -15,7 +15,7 @@ public class Vecteur {
 	
 	/**
 	 * Objectif : Obtenir le nombre de ligne du vecteur
-	 * @return this.v.length (le nombre de ligne du vecteur)
+	 * @return 	this.v.length le nombre de ligne du vecteur
 	 */
 	public int getNbLigne() {
 		return this.v.length;
@@ -23,7 +23,7 @@ public class Vecteur {
 	
 	/**
 	 * Objectif : Récupérer le tableau de pixels du vecteur
-	 * @return v (le tableau de pixels du vecteur)
+	 * @return 	v le tableau de pixels du vecteur
 	 */
 	public Pixel[] getPixels() {
 		return v;
@@ -31,7 +31,7 @@ public class Vecteur {
 	
 	/**
 	 * Objectif : Transformer un vecteur en matrice
-	 * @return  matrice (la matrice construite depuis le vecteur)
+	 * @return  matrice la matrice construite depuis le vecteur
 	 */
 	public Matrice transfoMat() {
 		//Crée une nouvelle matrice de 50 par 50
